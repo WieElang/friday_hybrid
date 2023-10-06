@@ -1,31 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:friday_hybrid/data/base_data.dart';
-import 'package:friday_hybrid/ui/workspace/viewModel/workspace_view_model.dart';
+import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/local/schemas.dart';
 
-class WorkspaceScreen extends StatefulWidget {
-  const WorkspaceScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<WorkspaceScreen> createState() => _WorkspaceScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _WorkspaceScreenState extends State<WorkspaceScreen> {
+class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
     super.initState();
-    Provider.of<WorkspaceViewModel>(context, listen: false).getProjects();
+    Provider.of<HomeViewModel>(context, listen: false).getProjects();
   }
 
   @override
   Widget build(BuildContext context) {
-    BaseData<List<Project>> projectData = Provider.of<WorkspaceViewModel>(context).baseData;
+    BaseData<List<Project>> projectData = Provider.of<HomeViewModel>(context).baseData;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Workspace"),
+        title: const Text("Home"),
         backgroundColor: Colors.transparent,
         elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
         centerTitle: false,
@@ -33,18 +33,16 @@ class _WorkspaceScreenState extends State<WorkspaceScreen> {
       body: Column(
         children: <Widget>[
           projectData.data != null
-          ? Expanded(
+              ? Expanded(
               child: ListView.builder(
-                itemCount: projectData.data!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                    child: Text(projectData.data![index].name),
-                  );
-                }
+                  itemCount: projectData.data!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Text(projectData.data![index].name);
+                  }
               )
           )
-          : const Expanded(child: Center(
-                child: Text('No Data'),
+              : const Expanded(child: Center(
+            child: Text('No Data'),
           )),
           if (projectData.errorMessage != null)
             Expanded(child: Center(

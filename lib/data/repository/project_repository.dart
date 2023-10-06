@@ -1,6 +1,6 @@
 import 'package:friday_hybrid/data/base_data.dart';
 import 'package:friday_hybrid/data/local/dao/project_dao.dart';
-import 'package:friday_hybrid/data/local/models/project.dart';
+import '../local/schemas.dart';
 import 'package:friday_hybrid/data/local/realm_database_helper.dart';
 import 'package:friday_hybrid/data/remote/api_response.dart';
 import 'package:friday_hybrid/data/remote/models/project_api_model.dart';

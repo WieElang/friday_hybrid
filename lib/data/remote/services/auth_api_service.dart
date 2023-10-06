@@ -6,13 +6,16 @@ import 'package:friday_hybrid/data/remote/api_constants.dart';
 import 'package:friday_hybrid/data/remote/api_response.dart';
 import 'package:friday_hybrid/data/remote/models/auth_api_model.dart';
 import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
-import 'package:http/http.dart' as http;
+import 'package:friday_hybrid/data/remote/utils/api_utils.dart';
 
 class AuthApiService {
-  static Future<ApiResponse<LoginApiModel>> login() async {
-    var url = Uri.parse('${ApiConstants.baseUrl}${ApiConstants.loginEndpoint}?token=${ApiConstants.apiToken}');
+  static Future<ApiResponse<LoginApiModel>> login(String email, String password) async {
+    Map data = {
+      "email": email,
+      "password": password
+    };
     try {
-      var response = await http.get(url);
+      var response = await ApiUtils.createPostRequest(ApiConstants.loginEndpoint, data: data, isUseToken: true);
       final responseJson = ApiResponseUtils.returnResponse(response);
       final loginApiModel = LoginApiModel.fromJson(responseJson);
       UserDao.fromApiModel(loginApiModel.user);

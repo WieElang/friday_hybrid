@@ -20,14 +20,14 @@ class ProjectApiModel {
   final String name;
   final int priority;
   final bool isActive;
-  final String createdString;
+  final String created;
 
   const ProjectApiModel({
     required this.id,
     required this.name,
     required this.priority,
     required this.isActive,
-    required this.createdString
+    required this.created
   });
 
   factory ProjectApiModel.fromJson(Map<String, dynamic> json) => ProjectApiModel(
@@ -35,6 +35,6 @@ class ProjectApiModel {
       name: json['name'],
       priority: json['priority'],
       isActive: json['is_active'],
-      createdString: json['created']
+      created: json['created']
   );
 }

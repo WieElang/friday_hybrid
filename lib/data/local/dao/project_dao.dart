@@ -2,7 +2,7 @@ import 'package:realm/realm.dart';
 
 import '../../../utils/date_utils.dart';
 import '../../remote/models/project_api_model.dart';
-import '../models/project.dart';
+import '../schemas.dart';
 import '../realm_database_helper.dart';
 
 class ProjectDao {
@@ -41,7 +41,13 @@ class ProjectDao {
   }
 
   static Project _createFromApiModel(ProjectApiModel projectApiModel) {
-    return Project(projectApiModel.id, projectApiModel.name, projectApiModel.priority, projectApiModel.isActive, DateUtils.getDateTimeFromString(projectApiModel.createdString));
+    return Project(
+        projectApiModel.id,
+        projectApiModel.name,
+        projectApiModel.priority,
+        projectApiModel.isActive,
+        DateUtils.getDateTimeFromString(projectApiModel.created)
+    );
   }
 
   static Project _updateFromApiModel(Project existingProject, ProjectApiModel projectApiModel) {
@@ -49,7 +55,7 @@ class ProjectDao {
     existingProject.name = projectApiModel.name;
     existingProject.priorityValue = projectApiModel.priority;
     existingProject.isActive = projectApiModel.isActive;
-    existingProject.created = DateUtils.getDateTimeFromString(projectApiModel.createdString);
+    existingProject.created = DateUtils.getDateTimeFromString(projectApiModel.created);
     return existingProject;
   }
 }

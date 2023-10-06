@@ -7,6 +7,10 @@ class Session {
     _prefs.then((value) => value.setString("sessionKey", sessionKey));
   }
 
+  static void clearSessionKey() {
+    _prefs.then((value) => value.remove("sessionKey"));
+  }
+
   static Future<String?> getSessionKey() async {
     SharedPreferences sharedPreferences = await _prefs;
     return sharedPreferences.getString("sessionKey");

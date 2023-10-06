@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:friday_hybrid/ui/accounts/account_screen.dart';
 import 'package:friday_hybrid/ui/daily_tasks/daily_task_screen.dart';
+import 'package:friday_hybrid/ui/home/ui/home_screen.dart';
+import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
 import 'package:friday_hybrid/ui/issues/issue_screen.dart';
-import 'package:friday_hybrid/ui/workspace/ui/workspace_screen.dart';
+import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
+import 'package:friday_hybrid/ui/login/viewModel/login_view_model.dart';
 import 'package:friday_hybrid/ui/workspace/viewModel/workspace_view_model.dart';
 import 'package:provider/provider.dart';
+
+import 'core/session.dart';
 
 void main() {
   runApp(const MyApp());
@@ -18,7 +23,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => WorkspaceViewModel()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
+        ChangeNotifierProvider(create: (_) => LoginViewModel()),
       ],
       child: MaterialApp(
         title: 'Friday',
@@ -42,8 +48,21 @@ class HomeBottomNavigationBar extends StatefulWidget {
 class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    Session.getSessionKey().then((value) {
+      if (value == null) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginScreen())
+        );
+      }
+    });
+  }
+
   static const List<Widget> _widgetOptions = <Widget>[
-    WorkspaceScreen(),
+    HomeScreen(),
     IssueScreen(),
     DailyTaskScreen(),
     AccountScreen()
@@ -58,14 +77,20 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+      body: SafeArea(
+        child: Stack (
+          children: [
+            Center(
+              child: _widgetOptions.elementAt(_selectedIndex),
+            ),
+          ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.work),
-            label: 'Workspace',
+            icon: Icon(Icons.home),
+            label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.bug_report),
