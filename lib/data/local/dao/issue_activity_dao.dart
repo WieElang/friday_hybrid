@@ -47,9 +47,8 @@ class IssueActivityDao {
   static IssueActivity _createFromApiModel(IssueActivityApiModel issueActivityApiModel, Issue? issue) {
     return IssueActivity(
         issueActivityApiModel.id,
-        issueActivityApiModel.name,
-        issueActivityApiModel.description,
         issueActivityApiModel.userName,
+        issueActivityApiModel.message,
         DateUtils.getDateTimeFromString(issueActivityApiModel.created),
         issue: issue
     );
@@ -57,8 +56,7 @@ class IssueActivityDao {
 
   static IssueActivity _updateFromApiModel(IssueActivity existingActivity, IssueActivityApiModel issueActivityApiModel, Issue? issue) {
     existingActivity.id = issueActivityApiModel.id;
-    existingActivity.name = issueActivityApiModel.name;
-    existingActivity.description = issueActivityApiModel.description;
+    existingActivity.message = issueActivityApiModel.message;
     existingActivity.userName = issueActivityApiModel.userName;
     existingActivity.created = DateUtils.getDateTimeFromString(issueActivityApiModel.created);
     existingActivity.issue = issue;

@@ -122,10 +122,7 @@ class Project extends _Project with RealmEntity, RealmObjectBase, RealmObject {
 class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
   Issue(
     int id,
-    int creatorId,
     String creatorName,
-    int assignedId,
-    String assignedName,
     String title,
     String description,
     String link,
@@ -135,10 +132,7 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
     DateTime created,
   ) {
     RealmObjectBase.set(this, 'id', id);
-    RealmObjectBase.set(this, 'creatorId', creatorId);
     RealmObjectBase.set(this, 'creatorName', creatorName);
-    RealmObjectBase.set(this, 'assignedId', assignedId);
-    RealmObjectBase.set(this, 'assignedName', assignedName);
     RealmObjectBase.set(this, 'title', title);
     RealmObjectBase.set(this, 'description', description);
     RealmObjectBase.set(this, 'link', link);
@@ -156,28 +150,11 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
   set id(int value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  int get creatorId => RealmObjectBase.get<int>(this, 'creatorId') as int;
-  @override
-  set creatorId(int value) => RealmObjectBase.set(this, 'creatorId', value);
-
-  @override
   String get creatorName =>
       RealmObjectBase.get<String>(this, 'creatorName') as String;
   @override
   set creatorName(String value) =>
       RealmObjectBase.set(this, 'creatorName', value);
-
-  @override
-  int get assignedId => RealmObjectBase.get<int>(this, 'assignedId') as int;
-  @override
-  set assignedId(int value) => RealmObjectBase.set(this, 'assignedId', value);
-
-  @override
-  String get assignedName =>
-      RealmObjectBase.get<String>(this, 'assignedName') as String;
-  @override
-  set assignedName(String value) =>
-      RealmObjectBase.set(this, 'assignedName', value);
 
   @override
   String get title => RealmObjectBase.get<String>(this, 'title') as String;
@@ -234,10 +211,7 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.registerFactory(Issue._);
     return const SchemaObject(ObjectType.realmObject, Issue, 'Issue', [
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
-      SchemaProperty('creatorId', RealmPropertyType.int),
       SchemaProperty('creatorName', RealmPropertyType.string),
-      SchemaProperty('assignedId', RealmPropertyType.int),
-      SchemaProperty('assignedName', RealmPropertyType.string),
       SchemaProperty('title', RealmPropertyType.string),
       SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('link', RealmPropertyType.string),
@@ -322,16 +296,14 @@ class IssueActivity extends _IssueActivity
     with RealmEntity, RealmObjectBase, RealmObject {
   IssueActivity(
     int id,
-    String name,
-    String description,
     String userName,
+    String message,
     DateTime created, {
     Issue? issue,
   }) {
     RealmObjectBase.set(this, 'id', id);
-    RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set(this, 'description', description);
     RealmObjectBase.set(this, 'userName', userName);
+    RealmObjectBase.set(this, 'message', message);
     RealmObjectBase.set(this, 'created', created);
     RealmObjectBase.set(this, 'issue', issue);
   }
@@ -344,22 +316,15 @@ class IssueActivity extends _IssueActivity
   set id(int value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  String get name => RealmObjectBase.get<String>(this, 'name') as String;
-  @override
-  set name(String value) => RealmObjectBase.set(this, 'name', value);
-
-  @override
-  String get description =>
-      RealmObjectBase.get<String>(this, 'description') as String;
-  @override
-  set description(String value) =>
-      RealmObjectBase.set(this, 'description', value);
-
-  @override
   String get userName =>
       RealmObjectBase.get<String>(this, 'userName') as String;
   @override
   set userName(String value) => RealmObjectBase.set(this, 'userName', value);
+
+  @override
+  String get message => RealmObjectBase.get<String>(this, 'message') as String;
+  @override
+  set message(String value) => RealmObjectBase.set(this, 'message', value);
 
   @override
   DateTime get created =>
@@ -387,9 +352,8 @@ class IssueActivity extends _IssueActivity
     return const SchemaObject(
         ObjectType.realmObject, IssueActivity, 'IssueActivity', [
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
-      SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('userName', RealmPropertyType.string),
+      SchemaProperty('message', RealmPropertyType.string),
       SchemaProperty('created', RealmPropertyType.timestamp),
       SchemaProperty('issue', RealmPropertyType.object,
           optional: true, linkTarget: 'Issue'),
@@ -406,6 +370,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     String link,
     DateTime updated,
     DateTime created, {
+    Project? project,
     Issue? issue,
   }) {
     RealmObjectBase.set(this, 'id', id);
@@ -415,6 +380,7 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'link', link);
     RealmObjectBase.set(this, 'updated', updated);
     RealmObjectBase.set(this, 'created', created);
+    RealmObjectBase.set(this, 'project', project);
     RealmObjectBase.set(this, 'issue', issue);
   }
 
@@ -458,6 +424,13 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   set created(DateTime value) => RealmObjectBase.set(this, 'created', value);
 
   @override
+  Project? get project =>
+      RealmObjectBase.get<Project>(this, 'project') as Project?;
+  @override
+  set project(covariant Project? value) =>
+      RealmObjectBase.set(this, 'project', value);
+
+  @override
   Issue? get issue => RealmObjectBase.get<Issue>(this, 'issue') as Issue?;
   @override
   set issue(covariant Issue? value) =>
@@ -482,6 +455,8 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('link', RealmPropertyType.string),
       SchemaProperty('updated', RealmPropertyType.timestamp),
       SchemaProperty('created', RealmPropertyType.timestamp),
+      SchemaProperty('project', RealmPropertyType.object,
+          optional: true, linkTarget: 'Project'),
       SchemaProperty('issue', RealmPropertyType.object,
           optional: true, linkTarget: 'Issue'),
     ]);
@@ -492,14 +467,14 @@ class TaskActivity extends _TaskActivity
     with RealmEntity, RealmObjectBase, RealmObject {
   TaskActivity(
     int id,
-    String name,
-    String description,
+    int oldStatusValue,
+    int newStatusValue,
     DateTime created, {
     Task? task,
   }) {
     RealmObjectBase.set(this, 'id', id);
-    RealmObjectBase.set(this, 'name', name);
-    RealmObjectBase.set(this, 'description', description);
+    RealmObjectBase.set(this, 'oldStatusValue', oldStatusValue);
+    RealmObjectBase.set(this, 'newStatusValue', newStatusValue);
     RealmObjectBase.set(this, 'created', created);
     RealmObjectBase.set(this, 'task', task);
   }
@@ -512,16 +487,18 @@ class TaskActivity extends _TaskActivity
   set id(int value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  String get name => RealmObjectBase.get<String>(this, 'name') as String;
+  int get oldStatusValue =>
+      RealmObjectBase.get<int>(this, 'oldStatusValue') as int;
   @override
-  set name(String value) => RealmObjectBase.set(this, 'name', value);
+  set oldStatusValue(int value) =>
+      RealmObjectBase.set(this, 'oldStatusValue', value);
 
   @override
-  String get description =>
-      RealmObjectBase.get<String>(this, 'description') as String;
+  int get newStatusValue =>
+      RealmObjectBase.get<int>(this, 'newStatusValue') as int;
   @override
-  set description(String value) =>
-      RealmObjectBase.set(this, 'description', value);
+  set newStatusValue(int value) =>
+      RealmObjectBase.set(this, 'newStatusValue', value);
 
   @override
   DateTime get created =>
@@ -548,8 +525,8 @@ class TaskActivity extends _TaskActivity
     return const SchemaObject(
         ObjectType.realmObject, TaskActivity, 'TaskActivity', [
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
-      SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('description', RealmPropertyType.string),
+      SchemaProperty('oldStatusValue', RealmPropertyType.int),
+      SchemaProperty('newStatusValue', RealmPropertyType.int),
       SchemaProperty('created', RealmPropertyType.timestamp),
       SchemaProperty('task', RealmPropertyType.object,
           optional: true, linkTarget: 'Task'),

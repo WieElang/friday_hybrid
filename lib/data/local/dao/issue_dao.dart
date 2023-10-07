@@ -39,10 +39,7 @@ class IssueDao {
   static Issue _createFromApiModel(IssueApiModel issueApiModel) {
     return Issue(
         issueApiModel.id,
-        issueApiModel.creatorId,
         issueApiModel.creatorName,
-        issueApiModel.assignedId,
-        issueApiModel.assignedName,
         issueApiModel.title,
         issueApiModel.description,
         issueApiModel.link,
@@ -55,10 +52,7 @@ class IssueDao {
 
   static Issue _updateFromApiModel(Issue existingIssue, IssueApiModel issueApiModel) {
     existingIssue.id = issueApiModel.id;
-    existingIssue.creatorId = issueApiModel.creatorId;
     existingIssue.creatorName = issueApiModel.creatorName;
-    existingIssue.assignedId = issueApiModel.assignedId;
-    existingIssue.assignedName = issueApiModel.assignedName;
     existingIssue.title = issueApiModel.title;
     existingIssue.description = issueApiModel.description;
     existingIssue.link = issueApiModel.link;

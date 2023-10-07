@@ -19,6 +19,7 @@ class TaskListApiModel {
 class TaskApiModel {
   final int id;
   final String name;
+  final int projectId;
   final int issueId;
   final int status;
   final String notes;
@@ -29,6 +30,7 @@ class TaskApiModel {
   const TaskApiModel({
     required this.id,
     required this.name,
+    required this.projectId,
     required this.issueId,
     required this.status,
     required this.notes,
@@ -40,6 +42,7 @@ class TaskApiModel {
   factory TaskApiModel.fromJson(Map<String, dynamic> json) => TaskApiModel(
       id: json['id'],
       name: json['name'],
+      projectId: json['project_id'],
       issueId: json['issue_id'],
       status: json['status'],
       notes: json['notes'],
@@ -70,23 +73,23 @@ class TaskActivityListApiModel {
 class TaskActivityApiModel {
   final int id;
   final int taskId;
-  final String name;
-  final String description;
+  final int oldStatus;
+  final int newStatus;
   final String created;
 
   const TaskActivityApiModel({
     required this.id,
     required this.taskId,
-    required this.name,
-    required this.description,
+    required this.oldStatus,
+    required this.newStatus,
     required this.created
   });
 
   factory TaskActivityApiModel.fromJson(Map<String, dynamic> json) => TaskActivityApiModel(
       id: json['id'],
       taskId: json['task_id'],
-      name: json['name'],
-      description: json['description'],
+      oldStatus: json['old_status'],
+      newStatus: json['new_status'],
       created: json['created']
   );
 }

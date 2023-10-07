@@ -47,8 +47,8 @@ class TaskActivityDao {
   static TaskActivity _createFromApiModel(TaskActivityApiModel taskActivityApiModel, Task? task) {
     return TaskActivity(
         taskActivityApiModel.id,
-        taskActivityApiModel.name,
-        taskActivityApiModel.description,
+        taskActivityApiModel.oldStatus,
+        taskActivityApiModel.newStatus,
         DateUtils.getDateTimeFromString(taskActivityApiModel.created),
         task: task
     );
@@ -56,8 +56,8 @@ class TaskActivityDao {
 
   static TaskActivity _updateFromApiModel(TaskActivity existingActivity, TaskActivityApiModel taskActivityApiModel, Task? task) {
     existingActivity.id = taskActivityApiModel.id;
-    existingActivity.name = taskActivityApiModel.name;
-    existingActivity.description = taskActivityApiModel.description;
+    existingActivity.oldStatusValue = taskActivityApiModel.oldStatus;
+    existingActivity.newStatusValue = taskActivityApiModel.newStatus;
     existingActivity.created = DateUtils.getDateTimeFromString(taskActivityApiModel.created);
     existingActivity.task = task;
     return existingActivity;

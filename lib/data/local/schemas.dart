@@ -23,10 +23,7 @@ class _Project {
 @RealmModel()
 class _Issue {
   @PrimaryKey() late int id;
-  late int creatorId;
   late String creatorName;
-  late int assignedId;
-  late String assignedName;
   late String title;
   late String description;
   late String link;
@@ -48,9 +45,8 @@ class _IssueChecklist {
 @RealmModel()
 class _IssueActivity {
   @PrimaryKey() late int id;
-  late String name;
-  late String description;
   late String userName;
+  late String message;
   late DateTime created;
   late _Issue? issue;
 }
@@ -64,14 +60,15 @@ class _Task {
   late String link;
   late DateTime updated;
   late DateTime created;
+  late _Project? project;
   late _Issue? issue;
 }
 
 @RealmModel()
 class _TaskActivity {
   @PrimaryKey() late int id;
-  late String name;
-  late String description;
+  late int oldStatusValue;
+  late int newStatusValue;
   late DateTime created;
   late _Task? task;
 }

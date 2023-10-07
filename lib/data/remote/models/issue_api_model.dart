@@ -125,16 +125,14 @@ class IssueActivityApiModel {
   final int id;
   final int issueId;
   final String userName;
-  final String name;
-  final String description;
+  final String message;
   final String created;
 
   const IssueActivityApiModel({
     required this.id,
     required this.issueId,
     required this.userName,
-    required this.name,
-    required this.description,
+    required this.message,
     required this.created
   });
 
@@ -142,8 +140,7 @@ class IssueActivityApiModel {
       id: json['id'],
       issueId: json['issue_id'],
       userName: json['user_name'],
-      name: json['name'],
-      description: json['description'],
+      message: json['message'],
       created: json['created']
   );
 }
