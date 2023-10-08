@@ -3,7 +3,8 @@ import 'package:friday_hybrid/ui/accounts/account_screen.dart';
 import 'package:friday_hybrid/ui/daily_tasks/daily_task_screen.dart';
 import 'package:friday_hybrid/ui/home/ui/home_screen.dart';
 import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
-import 'package:friday_hybrid/ui/issues/issue_screen.dart';
+import 'package:friday_hybrid/ui/issues/ui/issue_screen.dart';
+import 'package:friday_hybrid/ui/issues/viewModel/issue_view_model.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:friday_hybrid/ui/login/viewModel/login_view_model.dart';
 import 'package:friday_hybrid/ui/workspace/viewModel/workspace_view_model.dart';
@@ -23,8 +24,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => HomeViewModel()),
+        ChangeNotifierProvider(create: (_) => IssueViewModel()),
       ],
       child: MaterialApp(
         title: 'Friday',

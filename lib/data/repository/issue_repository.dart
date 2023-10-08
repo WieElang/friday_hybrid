@@ -13,7 +13,7 @@ class IssueRepository extends BaseRepository {
   Future<BaseData<List<Issue>>> getAllData() async {
     final response = await _getDataFromRemote();
     List<Issue> issues = IssueDao.getAll(realmInstance).toList();
-    return BaseData(issues, response.errorMessage);
+    return BaseData(issues, response.errorMessage, exception: response.exception);
   }
 
   @override

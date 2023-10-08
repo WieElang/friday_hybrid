@@ -15,8 +15,10 @@ class IssueApiService {
       return ApiResponse(issues, null);
     } on SocketException {
       return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
     } on Exception catch (e) {
-      return ApiResponse(null, 'Error: $e');
+      return ApiResponse(null, e.toString());
     }
   }
 }

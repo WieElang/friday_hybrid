@@ -21,13 +21,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     super.initState();
 
     // Add the observer.
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
     // Remove the observer
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
 
     super.dispose();
   }
@@ -58,8 +58,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 child: ListView.builder(
                     itemCount: projectData.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return const Card(
-                        child: Text('Title')
+                      return Card(
+                        child: Text(projectData.data![index].name)
                       );
                     }
                 ))

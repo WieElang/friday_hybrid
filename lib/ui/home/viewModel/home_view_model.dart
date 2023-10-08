@@ -15,8 +15,4 @@ class HomeViewModel with ChangeNotifier {
     _baseData = await ProjectRepository().getAllData();
     notifyListeners();
   }
-
-  void resetData() {
-    _baseData = BaseData(null, null, exception: null);
-  }
 }
