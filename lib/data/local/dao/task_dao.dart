@@ -65,10 +65,10 @@ class TaskDao {
       taskApiModel.id,
       taskApiModel.name,
       taskApiModel.status,
-      taskApiModel.notes,
-      taskApiModel.link,
-      DateUtils.getDateTimeFromString(taskApiModel.updated),
-      DateUtils.getDateTimeFromString(taskApiModel.created),
+      notes: taskApiModel.notes,
+      link: taskApiModel.link,
+      DateUtils.getDateTimeFromString(taskApiModel.updated)!,
+      DateUtils.getDateTimeFromString(taskApiModel.created)!,
       project: project,
       issue: issue
   );
@@ -79,8 +79,8 @@ class TaskDao {
     existingTask.statusValue = taskApiModel.status;
     existingTask.notes = taskApiModel.notes;
     existingTask.link = taskApiModel.link;
-    existingTask.updated = DateUtils.getDateTimeFromString(taskApiModel.updated);
-    existingTask.created = DateUtils.getDateTimeFromString(taskApiModel.created);
+    existingTask.updated = DateUtils.getDateTimeFromString(taskApiModel.updated)!;
+    existingTask.created = DateUtils.getDateTimeFromString(taskApiModel.created)!;
     existingTask.project = project;
     existingTask.issue = issue;
     return existingTask;

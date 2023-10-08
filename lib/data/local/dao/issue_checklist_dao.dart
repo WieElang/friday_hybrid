@@ -62,8 +62,8 @@ class IssueChecklistDao {
   static IssueChecklist _createFromApiModel(IssueChecklistApiModel issueChecklistApiModel, Issue? issue) {
     return IssueChecklist(
         issueChecklistApiModel.id,
-        issueChecklistApiModel.name,
-        issueChecklistApiModel.description,
+        name: issueChecklistApiModel.name,
+        description: issueChecklistApiModel.description,
         issueChecklistApiModel.isChecked,
         true,
         issue: issue

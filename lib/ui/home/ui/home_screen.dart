@@ -18,17 +18,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    super.initState();
-
     // Add the observer.
     WidgetsBinding.instance.addObserver(this);
+    super.initState();
+
+    Provider.of<HomeViewModel>(context, listen: false).getProjects();
   }
 
   @override
   void dispose() {
-    // Remove the observer
     WidgetsBinding.instance.removeObserver(this);
-
     super.dispose();
   }
 

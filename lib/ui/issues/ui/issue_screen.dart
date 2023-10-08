@@ -18,10 +18,10 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    super.initState();
-
     // Add the observer.
     WidgetsBinding.instance.addObserver(this);
+    super.initState();
+    Provider.of<IssueViewModel>(context, listen: false).getIssues();
   }
 
   @override
@@ -61,6 +61,7 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
                     final issue = issueData.data![index];
                     return Card(
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Text(issue.title),
                             Text(issue.statusValue.toString()),

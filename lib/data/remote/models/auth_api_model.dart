@@ -1,3 +1,15 @@
+class BaseStatusApiModel {
+  final String status;
+
+  const BaseStatusApiModel({
+    required this.status
+  });
+
+  factory BaseStatusApiModel.fromJson(Map<String, dynamic> json) => BaseStatusApiModel(
+      status: json["status"]
+  );
+}
+
 class LoginApiModel {
   final String status;
   final UserApiModel user;

@@ -49,7 +49,7 @@ class TaskActivityDao {
         taskActivityApiModel.id,
         taskActivityApiModel.oldStatus,
         taskActivityApiModel.newStatus,
-        DateUtils.getDateTimeFromString(taskActivityApiModel.created),
+        DateUtils.getDateTimeFromString(taskActivityApiModel.created)!,
         task: task
     );
   }
@@ -58,7 +58,7 @@ class TaskActivityDao {
     existingActivity.id = taskActivityApiModel.id;
     existingActivity.oldStatusValue = taskActivityApiModel.oldStatus;
     existingActivity.newStatusValue = taskActivityApiModel.newStatus;
-    existingActivity.created = DateUtils.getDateTimeFromString(taskActivityApiModel.created);
+    existingActivity.created = DateUtils.getDateTimeFromString(taskActivityApiModel.created)!;
     existingActivity.task = task;
     return existingActivity;
   }

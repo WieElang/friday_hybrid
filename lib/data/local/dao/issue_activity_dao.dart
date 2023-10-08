@@ -48,8 +48,8 @@ class IssueActivityDao {
     return IssueActivity(
         issueActivityApiModel.id,
         issueActivityApiModel.userName,
-        issueActivityApiModel.message,
-        DateUtils.getDateTimeFromString(issueActivityApiModel.created),
+        message: issueActivityApiModel.message,
+        DateUtils.getDateTimeFromString(issueActivityApiModel.created)!,
         issue: issue
     );
   }
@@ -58,7 +58,7 @@ class IssueActivityDao {
     existingActivity.id = issueActivityApiModel.id;
     existingActivity.message = issueActivityApiModel.message;
     existingActivity.userName = issueActivityApiModel.userName;
-    existingActivity.created = DateUtils.getDateTimeFromString(issueActivityApiModel.created);
+    existingActivity.created = DateUtils.getDateTimeFromString(issueActivityApiModel.created)!;
     existingActivity.issue = issue;
     return existingActivity;
   }

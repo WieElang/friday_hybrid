@@ -9,6 +9,10 @@ class UserDao {
     return realm.query<schemas.User>('id == $id').firstOrNull;
   }
 
+  static schemas.User? getFirst(Realm realm) {
+    return realm.all<schemas.User>().firstOrNull;
+  }
+
   static void fromApiModel(UserApiModel userApiModel) {
     final realm = realmInstance;
 

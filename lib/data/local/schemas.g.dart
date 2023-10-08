@@ -124,13 +124,13 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
     int id,
     String creatorName,
     String title,
-    String description,
-    String link,
     int statusValue,
     int priorityValue,
-    DateTime deadlineDate,
-    DateTime created,
-  ) {
+    DateTime created, {
+    String? description,
+    String? link,
+    DateTime? deadlineDate,
+  }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'creatorName', creatorName);
     RealmObjectBase.set(this, 'title', title);
@@ -162,16 +162,16 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
   set title(String value) => RealmObjectBase.set(this, 'title', value);
 
   @override
-  String get description =>
-      RealmObjectBase.get<String>(this, 'description') as String;
+  String? get description =>
+      RealmObjectBase.get<String>(this, 'description') as String?;
   @override
-  set description(String value) =>
+  set description(String? value) =>
       RealmObjectBase.set(this, 'description', value);
 
   @override
-  String get link => RealmObjectBase.get<String>(this, 'link') as String;
+  String? get link => RealmObjectBase.get<String>(this, 'link') as String?;
   @override
-  set link(String value) => RealmObjectBase.set(this, 'link', value);
+  set link(String? value) => RealmObjectBase.set(this, 'link', value);
 
   @override
   int get statusValue => RealmObjectBase.get<int>(this, 'statusValue') as int;
@@ -186,10 +186,10 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
       RealmObjectBase.set(this, 'priorityValue', value);
 
   @override
-  DateTime get deadlineDate =>
-      RealmObjectBase.get<DateTime>(this, 'deadlineDate') as DateTime;
+  DateTime? get deadlineDate =>
+      RealmObjectBase.get<DateTime>(this, 'deadlineDate') as DateTime?;
   @override
-  set deadlineDate(DateTime value) =>
+  set deadlineDate(DateTime? value) =>
       RealmObjectBase.set(this, 'deadlineDate', value);
 
   @override
@@ -213,11 +213,12 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
       SchemaProperty('creatorName', RealmPropertyType.string),
       SchemaProperty('title', RealmPropertyType.string),
-      SchemaProperty('description', RealmPropertyType.string),
-      SchemaProperty('link', RealmPropertyType.string),
+      SchemaProperty('description', RealmPropertyType.string, optional: true),
+      SchemaProperty('link', RealmPropertyType.string, optional: true),
       SchemaProperty('statusValue', RealmPropertyType.int),
       SchemaProperty('priorityValue', RealmPropertyType.int),
-      SchemaProperty('deadlineDate', RealmPropertyType.timestamp),
+      SchemaProperty('deadlineDate', RealmPropertyType.timestamp,
+          optional: true),
       SchemaProperty('created', RealmPropertyType.timestamp),
     ]);
   }
@@ -227,10 +228,10 @@ class IssueChecklist extends _IssueChecklist
     with RealmEntity, RealmObjectBase, RealmObject {
   IssueChecklist(
     int id,
-    String name,
-    String description,
     bool isChecked,
     bool isActive, {
+    String? name,
+    String? description,
     Issue? issue,
   }) {
     RealmObjectBase.set(this, 'id', id);
@@ -249,15 +250,15 @@ class IssueChecklist extends _IssueChecklist
   set id(int value) => RealmObjectBase.set(this, 'id', value);
 
   @override
-  String get name => RealmObjectBase.get<String>(this, 'name') as String;
+  String? get name => RealmObjectBase.get<String>(this, 'name') as String?;
   @override
-  set name(String value) => RealmObjectBase.set(this, 'name', value);
+  set name(String? value) => RealmObjectBase.set(this, 'name', value);
 
   @override
-  String get description =>
-      RealmObjectBase.get<String>(this, 'description') as String;
+  String? get description =>
+      RealmObjectBase.get<String>(this, 'description') as String?;
   @override
-  set description(String value) =>
+  set description(String? value) =>
       RealmObjectBase.set(this, 'description', value);
 
   @override
@@ -290,8 +291,8 @@ class IssueChecklist extends _IssueChecklist
     return const SchemaObject(
         ObjectType.realmObject, IssueChecklist, 'IssueChecklist', [
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
-      SchemaProperty('name', RealmPropertyType.string),
-      SchemaProperty('description', RealmPropertyType.string),
+      SchemaProperty('name', RealmPropertyType.string, optional: true),
+      SchemaProperty('description', RealmPropertyType.string, optional: true),
       SchemaProperty('isChecked', RealmPropertyType.bool),
       SchemaProperty('isActive', RealmPropertyType.bool),
       SchemaProperty('issue', RealmPropertyType.object,
@@ -305,8 +306,8 @@ class IssueActivity extends _IssueActivity
   IssueActivity(
     int id,
     String userName,
-    String message,
     DateTime created, {
+    String? message,
     Issue? issue,
   }) {
     RealmObjectBase.set(this, 'id', id);
@@ -330,9 +331,10 @@ class IssueActivity extends _IssueActivity
   set userName(String value) => RealmObjectBase.set(this, 'userName', value);
 
   @override
-  String get message => RealmObjectBase.get<String>(this, 'message') as String;
+  String? get message =>
+      RealmObjectBase.get<String>(this, 'message') as String?;
   @override
-  set message(String value) => RealmObjectBase.set(this, 'message', value);
+  set message(String? value) => RealmObjectBase.set(this, 'message', value);
 
   @override
   DateTime get created =>
@@ -361,7 +363,7 @@ class IssueActivity extends _IssueActivity
         ObjectType.realmObject, IssueActivity, 'IssueActivity', [
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
       SchemaProperty('userName', RealmPropertyType.string),
-      SchemaProperty('message', RealmPropertyType.string),
+      SchemaProperty('message', RealmPropertyType.string, optional: true),
       SchemaProperty('created', RealmPropertyType.timestamp),
       SchemaProperty('issue', RealmPropertyType.object,
           optional: true, linkTarget: 'Issue'),
@@ -374,10 +376,10 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
     int id,
     String name,
     int statusValue,
-    String notes,
-    String link,
     DateTime updated,
     DateTime created, {
+    String? notes,
+    String? link,
     Project? project,
     Issue? issue,
   }) {
@@ -410,14 +412,14 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
   set statusValue(int value) => RealmObjectBase.set(this, 'statusValue', value);
 
   @override
-  String get notes => RealmObjectBase.get<String>(this, 'notes') as String;
+  String? get notes => RealmObjectBase.get<String>(this, 'notes') as String?;
   @override
-  set notes(String value) => RealmObjectBase.set(this, 'notes', value);
+  set notes(String? value) => RealmObjectBase.set(this, 'notes', value);
 
   @override
-  String get link => RealmObjectBase.get<String>(this, 'link') as String;
+  String? get link => RealmObjectBase.get<String>(this, 'link') as String?;
   @override
-  set link(String value) => RealmObjectBase.set(this, 'link', value);
+  set link(String? value) => RealmObjectBase.set(this, 'link', value);
 
   @override
   DateTime get updated =>
@@ -459,8 +461,8 @@ class Task extends _Task with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('statusValue', RealmPropertyType.int),
-      SchemaProperty('notes', RealmPropertyType.string),
-      SchemaProperty('link', RealmPropertyType.string),
+      SchemaProperty('notes', RealmPropertyType.string, optional: true),
+      SchemaProperty('link', RealmPropertyType.string, optional: true),
       SchemaProperty('updated', RealmPropertyType.timestamp),
       SchemaProperty('created', RealmPropertyType.timestamp),
       SchemaProperty('project', RealmPropertyType.object,

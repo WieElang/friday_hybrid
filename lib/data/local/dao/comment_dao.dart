@@ -49,7 +49,7 @@ class CommentDao {
         commentApiModel.id,
         commentApiModel.userName,
         commentApiModel.message,
-        DateUtils.getDateTimeFromString(commentApiModel.created),
+        DateUtils.getDateTimeFromString(commentApiModel.created)!,
         task: task
     );
   }
@@ -58,7 +58,7 @@ class CommentDao {
     existingComment.id = commentApiModel.id;
     existingComment.userName = commentApiModel.userName;
     existingComment.message = commentApiModel.message;
-    existingComment.created = DateUtils.getDateTimeFromString(commentApiModel.created);
+    existingComment.created = DateUtils.getDateTimeFromString(commentApiModel.created)!;
     existingComment.task = task;
     return existingComment;
   }

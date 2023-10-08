@@ -21,11 +21,11 @@ class IssueApiModel {
   final int projectId;
   final String creatorName;
   final String title;
-  final String description;
-  final String link;
+  final String? description;
+  final String? link;
   final int status;
   final int priority;
-  final String deadlineDate;
+  final String? deadlineDate;
   final String created;
   final IssueChecklistListApiModel? checklists;
   final IssueActivityListApiModel? activities;
@@ -95,8 +95,8 @@ class IssueChecklistListApiModel {
 class IssueChecklistApiModel {
   final int id;
   final int issueId;
-  final String name;
-  final String description;
+  final String? name;
+  final String? description;
   final bool isChecked;
 
   const IssueChecklistApiModel({
@@ -138,7 +138,7 @@ class IssueActivityApiModel {
   final int id;
   final int issueId;
   final String userName;
-  final String message;
+  final String? message;
   final String created;
 
   const IssueActivityApiModel({

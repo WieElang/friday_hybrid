@@ -29,7 +29,26 @@ class AuthApiService {
     } on SocketException {
       return ApiResponse(null, 'No Internet Connection');
     } on Exception catch (e) {
-      return ApiResponse(null, 'Error: $e');
+      return ApiResponse(null, e.toString());
+    }
+  }
+
+  static Future<ApiResponse<BaseStatusApiModel>> logout() async {
+    try {
+      var response = await ApiUtils.createPostRequest(ApiConstants.logoutEndPoint);
+      final responseJson = ApiResponseUtils.returnResponse(response);
+      final baseStatusApiModel = BaseStatusApiModel.fromJson(responseJson);
+
+      if (baseStatusApiModel.status == "OK") {
+        Session.clearSessionKey();
+      }
+      return ApiResponse(baseStatusApiModel, null);
+    } on SocketException {
+      return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
+    } on Exception catch (e) {
+      return ApiResponse(null, e.toString());
     }
   }
 }

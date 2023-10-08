@@ -50,12 +50,12 @@ class IssueDao {
       issueApiModel.id,
       issueApiModel.creatorName,
       issueApiModel.title,
-      issueApiModel.description,
-      issueApiModel.link,
+      description: issueApiModel.description,
+      link: issueApiModel.link,
       issueApiModel.status,
       issueApiModel.priority,
-      DateUtils.getDateTimeFromString(issueApiModel.deadlineDate),
-      DateUtils.getDateTimeFromString(issueApiModel.created)
+      deadlineDate: DateUtils.getDateTimeFromString(issueApiModel.deadlineDate),
+      DateUtils.getDateTimeFromString(issueApiModel.created)!
   );
 
   static Issue _updateFromApiModel(Issue existingIssue, IssueApiModel issueApiModel) {
@@ -67,7 +67,7 @@ class IssueDao {
     existingIssue.statusValue = issueApiModel.status;
     existingIssue.priorityValue = issueApiModel.priority;
     existingIssue.deadlineDate = DateUtils.getDateTimeFromString(issueApiModel.deadlineDate);
-    existingIssue.created = DateUtils.getDateTimeFromString(issueApiModel.created);
+    existingIssue.created = DateUtils.getDateTimeFromString(issueApiModel.created)!;
     return existingIssue;
   }
 }

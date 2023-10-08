@@ -46,7 +46,7 @@ class ProjectDao {
         projectApiModel.name,
         projectApiModel.priority,
         projectApiModel.isActive,
-        DateUtils.getDateTimeFromString(projectApiModel.created)
+        DateUtils.getDateTimeFromString(projectApiModel.created)!
     );
   }
 
@@ -55,7 +55,7 @@ class ProjectDao {
     existingProject.name = projectApiModel.name;
     existingProject.priorityValue = projectApiModel.priority;
     existingProject.isActive = projectApiModel.isActive;
-    existingProject.created = DateUtils.getDateTimeFromString(projectApiModel.created);
+    existingProject.created = DateUtils.getDateTimeFromString(projectApiModel.created)!;
     return existingProject;
   }
 }

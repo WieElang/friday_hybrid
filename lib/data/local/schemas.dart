@@ -25,19 +25,19 @@ class _Issue {
   @PrimaryKey() late int id;
   late String creatorName;
   late String title;
-  late String description;
-  late String link;
+  late String? description;
+  late String? link;
   late int statusValue;
   late int priorityValue;
-  late DateTime deadlineDate;
+  late DateTime? deadlineDate;
   late DateTime created;
 }
 
 @RealmModel()
 class _IssueChecklist {
   @PrimaryKey() late int id;
-  late String name;
-  late String description;
+  late String? name;
+  late String? description;
   late bool isChecked;
   late bool isActive;
   late _Issue? issue;
@@ -47,7 +47,7 @@ class _IssueChecklist {
 class _IssueActivity {
   @PrimaryKey() late int id;
   late String userName;
-  late String message;
+  late String? message;
   late DateTime created;
   late _Issue? issue;
 }
@@ -57,8 +57,8 @@ class _Task {
   @PrimaryKey() late int id;
   late String name;
   late int statusValue;
-  late String notes;
-  late String link;
+  late String? notes;
+  late String? link;
   late DateTime updated;
   late DateTime created;
   late _Project? project;

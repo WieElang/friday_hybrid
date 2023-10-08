@@ -10,7 +10,7 @@ import 'package:friday_hybrid/data/remote/utils/api_utils.dart';
 class ProjectApiService {
   static Future<ApiResponse<ProjectListApiModel>> fetchProject() async {
     try {
-      var response = await ApiUtils.createGetRequest(ApiConstants.projectsEndpoint, isUseToken: true);
+      var response = await ApiUtils.createGetRequest(ApiConstants.projectsEndpoint);
       final responseJson = ApiResponseUtils.returnResponse(response);
       ProjectListApiModel projectList = ProjectListApiModel.fromJson(responseJson);
       return ApiResponse(projectList, null);
