@@ -14,6 +14,18 @@ class IssueChecklistDao {
     return realm.query<IssueChecklist>('id IN {${ids.join(", ")}}');
   }
 
+  static void inActiveByIssues(Realm realm, List<int> issueIds) {
+    final checklists = realm.query<IssueChecklist>('issue.id IN {${issueIds.join(", ")}}');
+    for (final checklist in checklists) {
+      checklist.isActive = false;
+    }
+  }
+
+  static void deleteInActive(Realm realm) {
+    final inActiveChecklists = realm.query<IssueChecklist>('isActive == ${false}');
+    realm.deleteMany(inActiveChecklists);
+  }
+
   static void fromApiModels(IssueChecklistListApiModel issueChecklistListApiModel) {
     final realm = realmInstance;
 
@@ -24,13 +36,15 @@ class IssueChecklistDao {
       issueIds.add(issueChecklistApiModel.issueId);
     }
 
-    final existingChecklists = getByIds(realm, checklistIds);
-    Map<int, IssueChecklist> existingChecklistMapping = { for (var checklist in existingChecklists) checklist.id: checklist };
-
-    final existingIssues = IssueDao.getByIds(realm, issueIds);
-    Map<int, Issue> existingIssueMapping = { for (var issue in existingIssues) issue.id : issue };
-
     realm.writeAsync(() {
+      inActiveByIssues(realm, issueIds);
+
+      final existingChecklists = getByIds(realm, checklistIds);
+      Map<int, IssueChecklist> existingChecklistMapping = { for (var checklist in existingChecklists) checklist.id: checklist };
+
+      final existingIssues = IssueDao.getByIds(realm, issueIds);
+      Map<int, Issue> existingIssueMapping = { for (var issue in existingIssues) issue.id : issue };
+
       for (final issueChecklistApiModel in issueChecklistListApiModel.checklists) {
         final existingChecklist = existingChecklistMapping[issueChecklistApiModel.id];
         final existingIssue = existingIssueMapping[issueChecklistApiModel.issueId];
@@ -40,6 +54,8 @@ class IssueChecklistDao {
           realm.add(_createFromApiModel(issueChecklistApiModel, existingIssue));
         }
       }
+
+      deleteInActive(realm);
     });
   }
 
@@ -49,6 +65,7 @@ class IssueChecklistDao {
         issueChecklistApiModel.name,
         issueChecklistApiModel.description,
         issueChecklistApiModel.isChecked,
+        true,
         issue: issue
     );
   }
@@ -58,6 +75,7 @@ class IssueChecklistDao {
     existingChecklist.name = issueChecklistApiModel.name;
     existingChecklist.description = issueChecklistApiModel.description;
     existingChecklist.isChecked = issueChecklistApiModel.isChecked;
+    existingChecklist.isActive = true;
     existingChecklist.issue = issue;
     return existingChecklist;
   }

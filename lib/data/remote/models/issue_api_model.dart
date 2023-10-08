@@ -18,10 +18,8 @@ class IssueListApiModel {
 
 class IssueApiModel {
   final int id;
-  final int creatorId;
+  final int projectId;
   final String creatorName;
-  final int assignedId;
-  final String assignedName;
   final String title;
   final String description;
   final String link;
@@ -29,36 +27,51 @@ class IssueApiModel {
   final int priority;
   final String deadlineDate;
   final String created;
+  final IssueChecklistListApiModel? checklists;
+  final IssueActivityListApiModel? activities;
 
   const IssueApiModel({
     required this.id,
-    required this.creatorId,
+    required this.projectId,
     required this.creatorName,
-    required this.assignedId,
-    required this.assignedName,
     required this.title,
     required this.description,
     required this.link,
     required this.status,
     required this.priority, 
     required this.deadlineDate,
-    required this.created
+    required this.created,
+    required this.checklists,
+    required this.activities
   });
   
-  factory IssueApiModel.fromJson(Map<String, dynamic> json) => IssueApiModel(
-      id: json['id'],
-      creatorId: json['creator_id'],
-      creatorName: json['creator_name'],
-      assignedId: json['assigned_id'],
-      assignedName: json['assigned_name'],
-      title: json['title'],
-      description: json['description'],
-      link: json['link'],
-      status: json['status'],
-      priority: json['priority'],
-      deadlineDate: json['deadline_date'],
-      created: json['created']
-  );
+  factory IssueApiModel.fromJson(Map<String, dynamic> json) {
+    IssueChecklistListApiModel? checklists;
+    IssueActivityListApiModel? activities;
+
+    if (json['checklists'] != null) {
+      checklists = IssueChecklistListApiModel.fromJson(json['checklists']);
+    }
+
+    if (json['activities'] != null) {
+      activities = IssueActivityListApiModel.fromJson(json['activities']);
+    }
+
+    return IssueApiModel(
+        id: json['id'],
+        projectId: json['project_id'],
+        creatorName: json['creator_name'],
+        title: json['title'],
+        description: json['description'],
+        link: json['link'],
+        status: json['status'],
+        priority: json['priority'],
+        deadlineDate: json['deadline_date'],
+        created: json['created'],
+        checklists: checklists,
+        activities: activities
+    );
+  }
 }
 
 // Issue Checklist

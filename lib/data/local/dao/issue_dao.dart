@@ -1,3 +1,5 @@
+import 'package:friday_hybrid/data/local/dao/issue_activity_dao.dart';
+import 'package:friday_hybrid/data/local/dao/issue_checklist_dao.dart';
 import 'package:friday_hybrid/data/remote/models/issue_api_model.dart';
 import 'package:realm/realm.dart';
 
@@ -32,23 +34,29 @@ class IssueDao {
         } else {
           realm.add(_createFromApiModel(issueApiModel));
         }
+
+        if (issueApiModel.checklists != null) {
+          IssueChecklistDao.fromApiModels(issueApiModel.checklists!);
+        }
+
+        if (issueApiModel.activities != null) {
+          IssueActivityDao.fromApiModels(issueApiModel.activities!);
+        }
       }
     });
   }
 
-  static Issue _createFromApiModel(IssueApiModel issueApiModel) {
-    return Issue(
-        issueApiModel.id,
-        issueApiModel.creatorName,
-        issueApiModel.title,
-        issueApiModel.description,
-        issueApiModel.link,
-        issueApiModel.status,
-        issueApiModel.priority,
-        DateUtils.getDateTimeFromString(issueApiModel.deadlineDate),
-        DateUtils.getDateTimeFromString(issueApiModel.created)
-    );
-  }
+  static Issue _createFromApiModel(IssueApiModel issueApiModel) => Issue(
+      issueApiModel.id,
+      issueApiModel.creatorName,
+      issueApiModel.title,
+      issueApiModel.description,
+      issueApiModel.link,
+      issueApiModel.status,
+      issueApiModel.priority,
+      DateUtils.getDateTimeFromString(issueApiModel.deadlineDate),
+      DateUtils.getDateTimeFromString(issueApiModel.created)
+  );
 
   static Issue _updateFromApiModel(Issue existingIssue, IssueApiModel issueApiModel) {
     existingIssue.id = issueApiModel.id;

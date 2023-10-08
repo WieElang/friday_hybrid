@@ -1,5 +1,7 @@
+import 'package:friday_hybrid/data/local/dao/comment_dao.dart';
 import 'package:friday_hybrid/data/local/dao/issue_dao.dart';
 import 'package:friday_hybrid/data/local/dao/project_dao.dart';
+import 'package:friday_hybrid/data/local/dao/task_activity_dao.dart';
 import 'package:friday_hybrid/data/remote/models/task_api_model.dart';
 import 'package:realm/realm.dart';
 
@@ -47,23 +49,29 @@ class TaskDao {
         } else {
           realm.add(_createFromApiModel(taskApiModel, existingProject, existingIssue));
         }
+
+        if (taskApiModel.activities != null) {
+          TaskActivityDao.fromApiModels(taskApiModel.activities!);
+        }
+
+        if (taskApiModel.comments != null) {
+          CommentDao.fromApiModels(taskApiModel.comments!);
+        }
       }
     });
   }
 
-  static Task _createFromApiModel(TaskApiModel taskApiModel, Project? project, Issue? issue) {
-    return Task(
-        taskApiModel.id,
-        taskApiModel.name,
-        taskApiModel.status,
-        taskApiModel.notes,
-        taskApiModel.link,
-        DateUtils.getDateTimeFromString(taskApiModel.updated),
-        DateUtils.getDateTimeFromString(taskApiModel.created),
-        project: project,
-        issue: issue
-    );
-  }
+  static Task _createFromApiModel(TaskApiModel taskApiModel, Project? project, Issue? issue) => Task(
+      taskApiModel.id,
+      taskApiModel.name,
+      taskApiModel.status,
+      taskApiModel.notes,
+      taskApiModel.link,
+      DateUtils.getDateTimeFromString(taskApiModel.updated),
+      DateUtils.getDateTimeFromString(taskApiModel.created),
+      project: project,
+      issue: issue
+  );
 
   static Task _updateFromApiModel(Task existingTask, TaskApiModel taskApiModel, Project? project, Issue? issue) {
     existingTask.id = taskApiModel.id;

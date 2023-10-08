@@ -229,13 +229,15 @@ class IssueChecklist extends _IssueChecklist
     int id,
     String name,
     String description,
-    bool isChecked, {
+    bool isChecked,
+    bool isActive, {
     Issue? issue,
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'description', description);
     RealmObjectBase.set(this, 'isChecked', isChecked);
+    RealmObjectBase.set(this, 'isActive', isActive);
     RealmObjectBase.set(this, 'issue', issue);
   }
 
@@ -264,6 +266,11 @@ class IssueChecklist extends _IssueChecklist
   set isChecked(bool value) => RealmObjectBase.set(this, 'isChecked', value);
 
   @override
+  bool get isActive => RealmObjectBase.get<bool>(this, 'isActive') as bool;
+  @override
+  set isActive(bool value) => RealmObjectBase.set(this, 'isActive', value);
+
+  @override
   Issue? get issue => RealmObjectBase.get<Issue>(this, 'issue') as Issue?;
   @override
   set issue(covariant Issue? value) =>
@@ -286,6 +293,7 @@ class IssueChecklist extends _IssueChecklist
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('description', RealmPropertyType.string),
       SchemaProperty('isChecked', RealmPropertyType.bool),
+      SchemaProperty('isActive', RealmPropertyType.bool),
       SchemaProperty('issue', RealmPropertyType.object,
           optional: true, linkTarget: 'Issue'),
     ]);

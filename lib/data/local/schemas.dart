@@ -39,6 +39,7 @@ class _IssueChecklist {
   late String name;
   late String description;
   late bool isChecked;
+  late bool isActive;
   late _Issue? issue;
 }
 
