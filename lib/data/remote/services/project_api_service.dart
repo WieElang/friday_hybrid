@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:friday_hybrid/core/session.dart';
 import 'package:friday_hybrid/data/remote/api_constants.dart';
 import 'package:friday_hybrid/data/remote/api_response.dart';
 import 'package:friday_hybrid/data/remote/models/project_api_model.dart';
@@ -15,8 +16,11 @@ class ProjectApiService {
       return ApiResponse(projectList, null);
     } on SocketException {
       return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      Session.clearSessionKey();
+      return ApiResponse(null, e.message, exception: e);
     } on Exception catch (e) {
-      return ApiResponse(null, 'Error: $e');
+      return ApiResponse(null, e.toString());
     }
   }
 }

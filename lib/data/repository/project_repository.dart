@@ -12,7 +12,7 @@ class ProjectRepository extends BaseRepository {
   Future<BaseData<List<Project>>> getAllData() async {
     final response = await _getDataFromRemote();
     List<Project> projects = ProjectDao.getActive(realmInstance).toList();
-    return BaseData(projects, response.errorMessage);
+    return BaseData(projects, response.errorMessage, exception: response.exception);
   }
 
   @override

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:friday_hybrid/data/base_data.dart';
+import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
 import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
+import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/local/schemas.dart';
@@ -12,12 +14,31 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void initState() {
     super.initState();
-    Provider.of<HomeViewModel>(context, listen: false).getProjects();
+
+    // Add the observer.
+    WidgetsBinding.instance!.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    // Remove the observer
+    WidgetsBinding.instance!.removeObserver(this);
+
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+
+    if (state == AppLifecycleState.resumed) {
+      Provider.of<HomeViewModel>(context, listen: false).getProjects();
+    }
   }
 
   @override
@@ -34,20 +55,37 @@ class _HomeScreenState extends State<HomeScreen> {
         children: <Widget>[
           projectData.data != null
               ? Expanded(
-              child: ListView.builder(
-                  itemCount: projectData.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Text(projectData.data![index].name);
-                  }
+                child: ListView.builder(
+                    itemCount: projectData.data!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return const Card(
+                        child: Text('Title')
+                      );
+                    }
+                ))
+              : const Expanded(child: Center(
+                  child: Text('No Data'),
+                )),
+          Expanded(
+              child: Center(
+                child: Column(
+                  children: [
+                    if (projectData.errorMessage != null)
+                      Text(projectData.errorMessage!),
+                    if (projectData.exception is SessionException)
+                      ElevatedButton(
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginScreen())
+                            )
+                          },
+                          child: const Text('Login Again')
+                      )
+                  ],
+                )
               )
           )
-              : const Expanded(child: Center(
-            child: Text('No Data'),
-          )),
-          if (projectData.errorMessage != null)
-            Expanded(child: Center(
-              child: Text(projectData.errorMessage!),
-            ))
         ],
       ),
     );

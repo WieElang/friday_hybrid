@@ -10,10 +10,18 @@ class ApiResponseUtils {
       case 200:
         dynamic responseJson = jsonDecode(response.body);
         return responseJson;
-      case 400 | 401 | 403 | 500:
+      case 403:
+        throw const SessionException('Session Expired');
+      case 400 | 401 | 500:
         throw Exception(response.body.toString());
       default:
         throw Exception('Error occured while communication with server with status code : ${response.statusCode}');
     }
   }
+}
+
+class SessionException implements Exception {
+  final String message;
+
+  const SessionException(this.message);
 }
