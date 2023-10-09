@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:friday_hybrid/ui/issues/viewModel/issue_view_model.dart';
 import 'package:provider/provider.dart';
 
-import '../../../data/base_data.dart';
-import '../../../data/local/schemas.dart';
-import '../../../data/remote/utils/api_response_utils.dart';
-import '../../login/ui/login_screen.dart';
+import '../../../../data/base_data.dart';
+import '../../../../data/local/schemas.dart';
+import '../../../../data/remote/utils/api_response_utils.dart';
+import '../../../login/ui/login_screen.dart';
+import '../viewModel/issue_view_model.dart';
 
 class IssueScreen extends StatefulWidget {
   const IssueScreen({super.key});
@@ -34,11 +34,13 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
     if (state == AppLifecycleState.resumed) {
       Provider.of<IssueViewModel>(context, listen: false).getIssues();
     }
+  }
+
+  void _onSelectedIssue(Issue issue) {
+    print(issue.title);
   }
 
   @override
@@ -59,15 +61,22 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
                   itemCount: issueData.data!.length,
                   itemBuilder: (BuildContext context, int index) {
                     final issue = issueData.data![index];
-                    return Card(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Text(issue.title),
-                            Text(issue.statusValue.toString()),
-                            Text(issue.deadlineDate.toString())
-                          ],
-                        )
+                    return InkWell(
+                      onTap: () => _onSelectedIssue(issue),
+                      child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(issue.title),
+                                Text(issue.statusValue.toString()),
+                                Text(issue.deadlineDate.toString())
+                              ],
+                            ),
+                          )
+                      ),
                     );
                   }
               ))

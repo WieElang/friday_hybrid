@@ -3,6 +3,7 @@ import 'package:friday_hybrid/data/base_data.dart';
 import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
 import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
+import 'package:friday_hybrid/ui/tasks/index/ui/task_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../data/local/schemas.dart';
@@ -33,11 +34,16 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeAppLifecycleState(state);
-
     if (state == AppLifecycleState.resumed) {
       Provider.of<HomeViewModel>(context, listen: false).getProjects();
     }
+  }
+
+  void _onSelectedProject(Project project) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskScreen(project: project))
+    );
   }
 
   @override
@@ -57,8 +63,15 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                 child: ListView.builder(
                     itemCount: projectData.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return Card(
-                        child: Text(projectData.data![index].name)
+                      Project project = projectData.data![index];
+                      return InkWell(
+                        onTap: () => _onSelectedProject(project),
+                        child: Card(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                              child: Text(project.name),
+                            )
+                        ),
                       );
                     }
                 ))

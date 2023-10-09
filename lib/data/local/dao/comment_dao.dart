@@ -15,6 +15,10 @@ class CommentDao {
     return realm.query<Comment>('id IN {${ids.join(", ")}}');
   }
 
+  static RealmResults<Comment> getByTask(Realm realm, int taskId) {
+    return realm.query<Comment>('task.id == $taskId');
+  }
+
   static void fromApiModels(CommentListApiModel commentListApiModel) {
     final realm = realmInstance;
 

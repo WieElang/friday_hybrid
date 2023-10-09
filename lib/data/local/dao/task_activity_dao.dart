@@ -15,6 +15,10 @@ class TaskActivityDao {
     return realm.query<TaskActivity>('id IN {${ids.join(", ")}}');
   }
 
+  static RealmResults<TaskActivity> getByTask(Realm realm, int taskId) {
+    return realm.query<TaskActivity>('task.id == $taskId');
+  }
+
   static void fromApiModels(TaskActivityListApiModel taskActivityListApiModel) {
     final realm = realmInstance;
 

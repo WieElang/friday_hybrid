@@ -18,6 +18,10 @@ class ProjectDao {
     return realm.query<Project>('id IN {${ids.join(", ")}}');
   }
 
+  static Project? getById(Realm realm, int id) {
+    return realm.query<Project>('id == $id').firstOrNull;
+  }
+
   static void fromApiModels(ProjectListApiModel projectListApiModel) {
     final realm = realmInstance;
 

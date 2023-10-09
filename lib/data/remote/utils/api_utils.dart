@@ -16,7 +16,7 @@ class ApiUtils {
       }
     }
 
-    final uri = Uri.http(ApiConstants.baseUrl, url, paramsData);
+    final uri = Uri.http(ApiConstants.baseUrl, url, paramsData.map((key, value) => MapEntry(key, value.toString())));
     return await http.get(uri);
   }
 

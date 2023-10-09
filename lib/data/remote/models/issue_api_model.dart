@@ -50,11 +50,11 @@ class IssueApiModel {
     IssueActivityListApiModel? activities;
 
     if (json['checklists'] != null) {
-      checklists = IssueChecklistListApiModel.fromJson(json['checklists']);
+      checklists = IssueChecklistListApiModel.fromJson(json);
     }
 
     if (json['activities'] != null) {
-      activities = IssueActivityListApiModel.fromJson(json['activities']);
+      activities = IssueActivityListApiModel.fromJson(json);
     }
 
     return IssueApiModel(

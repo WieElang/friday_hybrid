@@ -16,6 +16,10 @@ class IssueDao {
     return realm.query<Issue>('id IN {${ids.join(", ")}}');
   }
 
+  static Issue? getById(Realm realm, int id) {
+    return realm.query<Issue>('id == $id').firstOrNull;
+  }
+
   static void fromApiModels(IssueListApiModel issueListApiModel) {
     final realm = realmInstance;
 
@@ -42,6 +46,28 @@ class IssueDao {
         if (issueApiModel.activities != null) {
           IssueActivityDao.fromApiModels(issueApiModel.activities!);
         }
+      }
+    });
+  }
+
+  static void fromApiModel(IssueApiModel issueApiModel) {
+    final realm = realmInstance;
+
+    realm.writeAsync(() {
+      final existingIssue = IssueDao.getById(realm, issueApiModel.id);
+
+      if (existingIssue != null) {
+        _updateFromApiModel(existingIssue, issueApiModel);
+      } else {
+        realm.add(_createFromApiModel(issueApiModel));
+      }
+
+      if (issueApiModel.checklists != null) {
+        IssueChecklistDao.fromApiModels(issueApiModel.checklists!);
+      }
+
+      if (issueApiModel.activities != null) {
+        IssueActivityDao.fromApiModels(issueApiModel.activities!);
       }
     });
   }

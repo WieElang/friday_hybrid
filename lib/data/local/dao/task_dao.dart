@@ -18,6 +18,10 @@ class TaskDao {
     return realm.query<Task>('id IN {${ids.join(", ")}}');
   }
 
+  static Task? getById(Realm realm, int id) {
+    return realm.query<Task>('id == $id').firstOrNull;
+  }
+
   static void fromApiModels(TaskListApiModel taskListApiModel) {
     final realm = realmInstance;
 
@@ -57,6 +61,30 @@ class TaskDao {
         if (taskApiModel.comments != null) {
           CommentDao.fromApiModels(taskApiModel.comments!);
         }
+      }
+    });
+  }
+
+  static void fromApiModel(TaskApiModel taskApiModel) {
+    final realm = realmInstance;
+
+    realm.writeAsync(() {
+      final existingTask = getById(realm, taskApiModel.id);
+      final existingProject = ProjectDao.getById(realm, taskApiModel.projectId);
+      final existingIssue = IssueDao.getById(realm, taskApiModel.issueId);
+
+      if (existingTask != null) {
+        _updateFromApiModel(existingTask, taskApiModel, existingProject, existingIssue);
+      } else {
+        realm.add(_createFromApiModel(taskApiModel, existingProject, existingIssue));
+      }
+
+      if (taskApiModel.activities != null) {
+        TaskActivityDao.fromApiModels(taskApiModel.activities!);
+      }
+
+      if (taskApiModel.comments != null) {
+        CommentDao.fromApiModels(taskApiModel.comments!);
       }
     });
   }

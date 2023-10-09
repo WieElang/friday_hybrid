@@ -6,8 +6,20 @@ class ApiConstants {
   static String logoutEndPoint = "/api/auth/logout";
 
   static String projectsEndpoint = "/api/projects/";
+
+  // Issue
   static String issuesEndpoint = "/api/issues/";
+  static String issueDetailEndpoint = "/api/issues/details";
+  static String editStatusIssueEndpoint = "/api/issues/edit-status";
+
+  // Task
   static String tasksEndpoint = "/api/tasks/";
+  static String taskDetailEndpoint = "/api/tasks/details";
+  static String dailyTaskEndpoint = "/api/tasks/daily";
+  static String addTaskEndpoint = "/api/tasks/add";
+  static String editTaskEndpoint = "/api/tasks/edit";
+  static String editStatusTaskEndpoint = "/api/tasks/edit-status";
+  static String deleteTaskEndpoint = "/api/tasks/delete";
 
   static const String apiToken = "ZnJpZGF5LXRhc2stbWFuYWdlbWVudC1hcHAtc3RhbXBzLWluZG9uZXNpYS0yMDIz=";
 }
