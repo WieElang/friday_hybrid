@@ -14,6 +14,10 @@ class TaskDao {
     return realm.all<Task>();
   }
 
+  static RealmResults<Task> getByProject(Realm realm, int projectId) {
+    return realm.query<Task>('project.id == $projectId');
+  }
+
   static RealmResults<Task> getByIds(Realm realm, List<int> ids) {
     return realm.query<Task>('id IN {${ids.join(", ")}}');
   }

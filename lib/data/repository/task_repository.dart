@@ -12,7 +12,7 @@ class TaskRepository {
   // index
   Future<BaseData<List<Task>>> getAllData(int projectId) async {
     final response = await _getDataFromRemote(projectId);
-    List<Task> tasks = TaskDao.getAll(realmInstance).toList();
+    List<Task> tasks = TaskDao.getByProject(realmInstance, projectId).toList();
     return BaseData(tasks, response.errorMessage, exception: response.exception);
   }
 
