@@ -21,4 +21,22 @@ class IssueApiService {
       return ApiResponse(null, e.toString());
     }
   }
+
+  static Future<ApiResponse<IssueApiModel>> fetchIssueDetail(int issueId) async {
+    Map<String, dynamic> data = {
+      "issue": issueId
+    };
+    try {
+      var response = await ApiUtils.createGetRequest(ApiConstants.issueDetailEndpoint, params: data);
+      final responseJson = ApiResponseUtils.returnResponse(response);
+      IssueApiModel issueData = IssueApiModel.fromJson(responseJson['issue']);
+      return ApiResponse(issueData, null);
+    } on SocketException {
+      return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
+    } on Exception catch (e) {
+      return ApiResponse(null, e.toString());
+    }
+  }
 }

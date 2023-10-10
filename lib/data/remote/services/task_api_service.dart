@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:friday_hybrid/data/local/dao/task_dao.dart';
 import 'package:friday_hybrid/data/remote/api_constants.dart';
 import 'package:friday_hybrid/data/remote/api_response.dart';
 import 'package:friday_hybrid/data/remote/models/task_api_model.dart';
@@ -25,6 +26,21 @@ class TaskApiService {
     }
   }
 
+  static Future<ApiResponse<DailyTaskApiModel>> fetchDailyTask() async {
+    try {
+      var response = await ApiUtils.createGetRequest(ApiConstants.dailyTaskEndpoint);
+      final responseJson = ApiResponseUtils.returnResponse(response);
+      DailyTaskApiModel dailyTaskApiModel = DailyTaskApiModel.fromJson(responseJson);
+      return ApiResponse(dailyTaskApiModel, null);
+    } on SocketException {
+      return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
+    } on Exception catch (e) {
+      return ApiResponse(null, e.toString());
+    }
+  }
+
   static Future<ApiResponse<TaskDetailApiModel>> fetchTaskDetail(int taskId) async {
     Map<String, dynamic> data = {
       "task": taskId
@@ -34,6 +50,55 @@ class TaskApiService {
       final responseJson = ApiResponseUtils.returnResponse(response);
       TaskDetailApiModel taskData = TaskDetailApiModel.fromJson(responseJson);
       return ApiResponse(taskData, null);
+    } on SocketException {
+      return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
+    } on Exception catch (e) {
+      return ApiResponse(null, e.toString());
+    }
+  }
+
+  static Future<ApiResponse<TaskApiModel>> addTask(int projectId, int issueId, String name, String? notes, String? link) async {
+    Map data = {
+      "project": projectId,
+      "issue": issueId,
+      "name": name,
+      "notes": notes,
+      "link": link
+    };
+    try {
+      var response = await ApiUtils.createPostRequest(ApiConstants.addTaskEndpoint, data: data);
+      final responseJson = ApiResponseUtils.returnResponse(response);
+      final taskApiModel = TaskApiModel.fromJson(responseJson['task']);
+      TaskDao.fromApiModel(taskApiModel);
+
+      return ApiResponse(taskApiModel, null);
+    } on SocketException {
+      return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
+    } on Exception catch (e) {
+      return ApiResponse(null, e.toString());
+    }
+  }
+
+  static Future<ApiResponse<TaskApiModel>> editTask(int taskId, int projectId, int issueId, String name, String? notes, String? link) async {
+    Map data = {
+      "task": taskId,
+      "project": projectId,
+      "issue": issueId,
+      "name": name,
+      "notes": notes,
+      "link": link
+    };
+    try {
+      var response = await ApiUtils.createPostRequest(ApiConstants.editTaskEndpoint, data: data);
+      final responseJson = ApiResponseUtils.returnResponse(response);
+      final taskApiModel = TaskApiModel.fromJson(responseJson['task']);
+      TaskDao.fromApiModel(taskApiModel);
+
+      return ApiResponse(taskApiModel, null);
     } on SocketException {
       return ApiResponse(null, 'No Internet Connection');
     } on SessionException catch (e) {

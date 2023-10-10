@@ -4,6 +4,7 @@ import 'package:friday_hybrid/data/local/schemas.dart';
 import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:friday_hybrid/ui/tasks/details/ui/task_detail_screen.dart';
+import 'package:friday_hybrid/ui/tasks/form/ui/task_form_screen.dart';
 import 'package:friday_hybrid/ui/tasks/index/viewModel/task_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -47,7 +48,10 @@ class _TaskScreenState extends State<TaskScreen> with WidgetsBindingObserver {
   }
 
   void _onAddTask() {
-    print("Add Task");
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.project))
+    );
   }
 
   @override

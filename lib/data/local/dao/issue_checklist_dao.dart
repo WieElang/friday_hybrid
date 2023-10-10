@@ -14,6 +14,10 @@ class IssueChecklistDao {
     return realm.query<IssueChecklist>('id IN {${ids.join(", ")}}');
   }
 
+  static RealmResults<IssueChecklist> getByIssue(Realm realm, int issueId) {
+    return realm.query<IssueChecklist>('issue.id == $issueId');
+  }
+
   static void inActiveByIssues(Realm realm, List<int> issueIds) {
     final checklists = realm.query<IssueChecklist>('issue.id IN {${issueIds.join(", ")}}');
     for (final checklist in checklists) {

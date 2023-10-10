@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:friday_hybrid/ui/accounts/ui/account_screen.dart';
 import 'package:friday_hybrid/ui/accounts/viewModel/account_view_model.dart';
 import 'package:friday_hybrid/ui/daily_tasks/ui/daily_task_screen.dart';
+import 'package:friday_hybrid/ui/daily_tasks/viewModel/daily_task_view_model.dart';
 import 'package:friday_hybrid/ui/home/ui/home_screen.dart';
 import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
+import 'package:friday_hybrid/ui/issues/details/viewModel/issue_detail_view_model.dart';
 import 'package:friday_hybrid/ui/issues/index/ui/issue_screen.dart';
 import 'package:friday_hybrid/ui/issues/index/viewModel/issue_view_model.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:friday_hybrid/ui/login/viewModel/login_view_model.dart';
 import 'package:friday_hybrid/ui/tasks/details/viewModel/task_detail_view_model.dart';
+import 'package:friday_hybrid/ui/tasks/form/viewModel/task_form_view_model.dart';
 import 'package:friday_hybrid/ui/tasks/index/viewModel/task_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +33,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HomeViewModel()),
         ChangeNotifierProvider(create: (_) => TaskViewModel()),
         ChangeNotifierProvider(create: (_) => TaskDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => TaskFormViewModel()),
         ChangeNotifierProvider(create: (_) => IssueViewModel()),
+        ChangeNotifierProvider(create: (_) => IssueDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => DailyTaskViewModel()),
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
       ],
       child: MaterialApp(

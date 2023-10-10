@@ -1,6 +1,6 @@
-// Task
 import 'package:friday_hybrid/data/remote/models/issue_api_model.dart';
 
+// Task
 class TaskListApiModel {
   final List<TaskApiModel> tasks;
 
@@ -30,6 +30,36 @@ class TaskDetailApiModel {
   factory TaskDetailApiModel.fromJson(Map<String, dynamic> json) => TaskDetailApiModel(
       task: TaskApiModel.fromJson(json['task']),
       issue: IssueApiModel.fromJson(json['issue'])
+  );
+}
+
+class DailyTaskApiModel {
+  final TaskListApiModel tasks;
+  final TaskActivityListApiModel activities;
+
+  const DailyTaskApiModel({
+    required this.tasks,
+    required this.activities
+  });
+
+  factory DailyTaskApiModel.fromJson(Map<String, dynamic> json) => DailyTaskApiModel(
+      tasks: TaskListApiModel.fromJson(json),
+      activities: TaskActivityListApiModel.fromJson(json)
+  );
+}
+
+class SuccessTaskApiModel {
+  final String status;
+  final TaskApiModel task;
+
+  const SuccessTaskApiModel({
+    required this.status,
+    required this.task
+  });
+
+  factory SuccessTaskApiModel.fromJson(Map<String, dynamic> json) => SuccessTaskApiModel(
+      status: json['status'],
+      task: TaskApiModel.fromJson(json['task']),
   );
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friday_hybrid/ui/issues/details/ui/issue_detail_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/base_data.dart';
@@ -40,7 +41,10 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
   }
 
   void _onSelectedIssue(Issue issue) {
-    print(issue.title);
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => IssueDetailScreen(issue: issue))
+    );
   }
 
   @override

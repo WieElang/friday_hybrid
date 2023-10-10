@@ -15,6 +15,10 @@ class IssueActivityDao {
     return realm.query<IssueActivity>('id IN {${ids.join(", ")}}');
   }
 
+  static RealmResults<IssueActivity> getByIssue(Realm realm, int issueId) {
+    return realm.query<IssueActivity>('issue.id == $issueId');
+  }
+
   static void fromApiModels(IssueActivityListApiModel issueActivityListApiModel) {
     final realm = realmInstance;
 

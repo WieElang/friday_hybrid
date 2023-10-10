@@ -1,5 +1,6 @@
 import 'package:friday_hybrid/data/base_data.dart';
 import 'package:friday_hybrid/data/local/dao/issue_dao.dart';
+import 'package:friday_hybrid/data/local/dao/task_activity_dao.dart';
 import 'package:friday_hybrid/data/local/dao/task_dao.dart';
 import 'package:friday_hybrid/data/local/realm_database_helper.dart';
 import 'package:friday_hybrid/data/remote/api_response.dart';
@@ -36,6 +37,22 @@ class TaskRepository {
     if (apiResponse.data != null) {
       TaskDao.fromApiModel(apiResponse.data!.task);
       IssueDao.fromApiModel(apiResponse.data!.issue);
+    }
+    return apiResponse;
+  }
+
+  // daily
+  Future<BaseData<List<Task>>> getDailyTasks() async {
+    final response = await _getDailyTaskFromRemote();
+    List<Task> tasks = TaskDao.getDailyTask(realmInstance).toList();
+    return BaseData(tasks, response.errorMessage, exception: response.exception);
+  }
+
+  Future<ApiResponse<DailyTaskApiModel>> _getDailyTaskFromRemote() async {
+    final apiResponse = await TaskApiService.fetchDailyTask();
+    if (apiResponse.data != null) {
+      TaskDao.fromApiModels(apiResponse.data!.tasks);
+      TaskActivityDao.fromApiModels(apiResponse.data!.activities);
     }
     return apiResponse;
   }

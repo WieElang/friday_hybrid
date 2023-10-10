@@ -19,6 +19,12 @@ class TaskActivityDao {
     return realm.query<TaskActivity>('task.id == $taskId');
   }
 
+  static RealmResults<TaskActivity> getTodayActivities(Realm realm) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    return realm.query<TaskActivity>(r'created >= $0', [today]);
+  }
+
   static void fromApiModels(TaskActivityListApiModel taskActivityListApiModel) {
     final realm = realmInstance;
 

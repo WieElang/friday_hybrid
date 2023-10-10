@@ -20,6 +20,10 @@ class IssueDao {
     return realm.query<Issue>('id == $id').firstOrNull;
   }
 
+  static RealmResults<Issue> getByProject(Realm realm, int projectId) {
+    return realm.query<Issue>('project.id == $projectId');
+  }
+
   static void fromApiModels(IssueListApiModel issueListApiModel) {
     final realm = realmInstance;
 

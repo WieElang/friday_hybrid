@@ -6,6 +6,8 @@ import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:friday_hybrid/ui/tasks/details/viewModel/task_detail_view_model.dart';
 import 'package:provider/provider.dart';
 
+import '../../form/ui/task_form_screen.dart';
+
 class TaskDetailScreen extends StatefulWidget {
   final Task task;
   const TaskDetailScreen({super.key, required this.task});
@@ -43,7 +45,10 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
   }
 
   void _onEditTask() {
-    print("Edit Task");
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.task.project!, task: widget.task))
+    );
   }
 
   @override
