@@ -12,6 +12,7 @@ class ApiConstants {
   static String issuesEndpoint = "/api/issues/";
   static String issueDetailEndpoint = "/api/issues/details";
   static String editStatusIssueEndpoint = "/api/issues/edit-status";
+  static String editIssueChecklistEndpoint = "/api/issues/edit-checklist";
 
   // Task
   static String tasksEndpoint = "/api/tasks/";

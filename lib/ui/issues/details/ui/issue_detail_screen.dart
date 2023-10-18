@@ -47,8 +47,10 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
     );
   }
 
-  void _onCheckEditTask(bool? isChecked) {
-    print(isChecked.toString());
+  void _onCheckEditTask(int checklistId) {
+    Provider.of<IssueDetailViewModel>(context, listen: false).editChecklist(checklistId).then((value) => {
+      Provider.of<IssueDetailViewModel>(context, listen: false).getIssue(widget.issue.id)
+    });
   }
 
   @override
@@ -146,9 +148,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                                               children: [
                                                 Checkbox(
                                                     value: checklist.isChecked,
-                                                    onChanged: (bool? isChecked) => {
-                                                      isChecked = true
-                                                    }
+                                                    onChanged: (bool? isChecked) => _onCheckEditTask(checklist.id)
                                                 ),
                                                 Column(
                                                   mainAxisAlignment: MainAxisAlignment.start,
