@@ -11,10 +11,12 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
     int id,
     String name,
     String email,
+    String employeeCode,
   ) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'name', name);
     RealmObjectBase.set(this, 'email', email);
+    RealmObjectBase.set(this, 'employeeCode', employeeCode);
   }
 
   User._();
@@ -35,6 +37,13 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
   set email(String value) => RealmObjectBase.set(this, 'email', value);
 
   @override
+  String get employeeCode =>
+      RealmObjectBase.get<String>(this, 'employeeCode') as String;
+  @override
+  set employeeCode(String value) =>
+      RealmObjectBase.set(this, 'employeeCode', value);
+
+  @override
   Stream<RealmObjectChanges<User>> get changes =>
       RealmObjectBase.getChanges<User>(this);
 
@@ -49,6 +58,7 @@ class User extends _User with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('id', RealmPropertyType.int, primaryKey: true),
       SchemaProperty('name', RealmPropertyType.string),
       SchemaProperty('email', RealmPropertyType.string),
+      SchemaProperty('employeeCode', RealmPropertyType.string),
     ]);
   }
 }
@@ -130,6 +140,7 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
     String? description,
     String? link,
     DateTime? deadlineDate,
+    Project? project,
   }) {
     RealmObjectBase.set(this, 'id', id);
     RealmObjectBase.set(this, 'creatorName', creatorName);
@@ -140,6 +151,7 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
     RealmObjectBase.set(this, 'priorityValue', priorityValue);
     RealmObjectBase.set(this, 'deadlineDate', deadlineDate);
     RealmObjectBase.set(this, 'created', created);
+    RealmObjectBase.set(this, 'project', project);
   }
 
   Issue._();
@@ -199,6 +211,13 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
   set created(DateTime value) => RealmObjectBase.set(this, 'created', value);
 
   @override
+  Project? get project =>
+      RealmObjectBase.get<Project>(this, 'project') as Project?;
+  @override
+  set project(covariant Project? value) =>
+      RealmObjectBase.set(this, 'project', value);
+
+  @override
   Stream<RealmObjectChanges<Issue>> get changes =>
       RealmObjectBase.getChanges<Issue>(this);
 
@@ -220,6 +239,8 @@ class Issue extends _Issue with RealmEntity, RealmObjectBase, RealmObject {
       SchemaProperty('deadlineDate', RealmPropertyType.timestamp,
           optional: true),
       SchemaProperty('created', RealmPropertyType.timestamp),
+      SchemaProperty('project', RealmPropertyType.object,
+          optional: true, linkTarget: 'Project'),
     ]);
   }
 }

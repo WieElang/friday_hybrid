@@ -78,7 +78,11 @@ class _AccountScreenState extends State<AccountScreen> with WidgetsBindingObserv
                           children: [
                             Text(user?.name ?? 'Unknown'),
                             const SizedBox(height: 8),
-                            Text(user?.email ?? 'Unknown')
+                            Text(user?.email ?? 'Unknown'),
+                            const SizedBox(height: 8),
+                            Text(user?.employeeCode ?? '-'),
+                            const SizedBox(height: 8),
+                            const Text('Developer'),
                           ],
                         )
                       ],

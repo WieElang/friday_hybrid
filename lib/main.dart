@@ -6,6 +6,7 @@ import 'package:friday_hybrid/ui/daily_tasks/viewModel/daily_task_view_model.dar
 import 'package:friday_hybrid/ui/home/ui/home_screen.dart';
 import 'package:friday_hybrid/ui/home/viewModel/home_view_model.dart';
 import 'package:friday_hybrid/ui/issues/details/viewModel/issue_detail_view_model.dart';
+import 'package:friday_hybrid/ui/issues/form/viewModel/issue_form_view_model.dart';
 import 'package:friday_hybrid/ui/issues/index/ui/issue_screen.dart';
 import 'package:friday_hybrid/ui/issues/index/viewModel/issue_view_model.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => TaskFormViewModel()),
         ChangeNotifierProvider(create: (_) => IssueViewModel()),
         ChangeNotifierProvider(create: (_) => IssueDetailViewModel()),
+        ChangeNotifierProvider(create: (_) => IssueFormViewModel()),
         ChangeNotifierProvider(create: (_) => DailyTaskViewModel()),
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
       ],

@@ -1,5 +1,6 @@
 import 'package:friday_hybrid/data/local/dao/issue_activity_dao.dart';
 import 'package:friday_hybrid/data/local/dao/issue_checklist_dao.dart';
+import 'package:friday_hybrid/data/local/dao/project_dao.dart';
 import 'package:friday_hybrid/data/remote/models/issue_api_model.dart';
 import 'package:realm/realm.dart';
 
@@ -28,19 +29,26 @@ class IssueDao {
     final realm = realmInstance;
 
     List<int> issueIds = [];
+    List<int> projectIds = [];
     for (final issueApiModel in issueListApiModel.issues) {
       issueIds.add(issueApiModel.id);
+      projectIds.add(issueApiModel.projectId);
     }
 
     final existingIssues = getByIds(realm, issueIds);
     Map<int, Issue> existingIssueMapping = { for (var issue in existingIssues) issue.id : issue };
+
+    final existingProjects = ProjectDao.getByIds(realm, projectIds);
+    Map<int, Project> existingProjectMapping = { for (var project in existingProjects) project.id : project };
+
     realm.writeAsync(() {
       for (final issueApiModel in issueListApiModel.issues) {
         final existingIssue = existingIssueMapping[issueApiModel.id];
+        final existingProject = existingProjectMapping[issueApiModel.projectId];
         if (existingIssue != null) {
-          _updateFromApiModel(existingIssue, issueApiModel);
+          _updateFromApiModel(existingIssue, issueApiModel, existingProject);
         } else {
-          realm.add(_createFromApiModel(issueApiModel));
+          realm.add(_createFromApiModel(issueApiModel, existingProject));
         }
 
         if (issueApiModel.checklists != null) {
@@ -59,11 +67,12 @@ class IssueDao {
 
     realm.writeAsync(() {
       final existingIssue = IssueDao.getById(realm, issueApiModel.id);
+      final existingProject = ProjectDao.getById(realm, issueApiModel.projectId);
 
       if (existingIssue != null) {
-        _updateFromApiModel(existingIssue, issueApiModel);
+        _updateFromApiModel(existingIssue, issueApiModel, existingProject);
       } else {
-        realm.add(_createFromApiModel(issueApiModel));
+        realm.add(_createFromApiModel(issueApiModel, existingProject));
       }
 
       if (issueApiModel.checklists != null) {
@@ -76,7 +85,7 @@ class IssueDao {
     });
   }
 
-  static Issue _createFromApiModel(IssueApiModel issueApiModel) => Issue(
+  static Issue _createFromApiModel(IssueApiModel issueApiModel, Project? project) => Issue(
       issueApiModel.id,
       issueApiModel.creatorName,
       issueApiModel.title,
@@ -85,10 +94,11 @@ class IssueDao {
       issueApiModel.status,
       issueApiModel.priority,
       deadlineDate: DateUtils.getDateTimeFromString(issueApiModel.deadlineDate),
-      DateUtils.getDateTimeFromString(issueApiModel.created)!
+      DateUtils.getDateTimeFromString(issueApiModel.created)!,
+      project: project
   );
 
-  static Issue _updateFromApiModel(Issue existingIssue, IssueApiModel issueApiModel) {
+  static Issue _updateFromApiModel(Issue existingIssue, IssueApiModel issueApiModel, Project? project) {
     existingIssue.id = issueApiModel.id;
     existingIssue.creatorName = issueApiModel.creatorName;
     existingIssue.title = issueApiModel.title;
@@ -98,6 +108,7 @@ class IssueDao {
     existingIssue.priorityValue = issueApiModel.priority;
     existingIssue.deadlineDate = DateUtils.getDateTimeFromString(issueApiModel.deadlineDate);
     existingIssue.created = DateUtils.getDateTimeFromString(issueApiModel.created)!;
+    existingIssue.project = project;
     return existingIssue;
   }
 }

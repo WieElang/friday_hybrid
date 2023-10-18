@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friday_hybrid/core/enums.dart';
 import 'package:friday_hybrid/data/base_data.dart';
 import 'package:friday_hybrid/data/local/schemas.dart';
 import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
@@ -88,20 +89,19 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   taskData.data?.name ?? "-",
                                   style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
                                 ),
                                 const SizedBox(height: 4.0),
-                                InkWell(
-                                  onTap: () => _onEditStatusTask(taskData.data?.statusValue),
-                                  child: Card(
-                                      child: Padding(
+                                Card(
+                                    child: Padding(
                                         padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                        child: Text(taskData.data?.statusValue.toString() ?? "-")
-                                      )
-                                  )
+                                        child: Text(TaskStatus.getStatus(taskData.data?.statusValue ?? 0)?.displayName ?? "-")
+                                    )
                                 ),
                                 const SizedBox(height: 16.0),
                                 Text(taskData.data?.notes ?? "-"),
@@ -117,59 +117,87 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
                         ),
                       ),
                       if (activities.isNotEmpty)
-                        Column(
-                          children: [
-                            const SizedBox(height: 16.0),
-                            Expanded(
-                              child: ListView.builder(
-                                  itemCount: activities.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    TaskActivity activity = activities[index];
-                                    return Card(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(16.0),
-                                        child: Text("Changes from ${activity.oldStatusValue} to ${activity.newStatusValue} on ${activity.created.toString()}"),
-                                      ),
-                                    );
-                                  }
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 16.0),
+                              Expanded(
+                                child: ListView.builder(
+                                    itemCount: activities.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      TaskActivity activity = activities[index];
+                                      return Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                              "Changes from ${TaskStatus.getStatus(activity.oldStatusValue)!.displayName} to ${TaskStatus.getStatus(activity.newStatusValue)!.displayName} on ${activity.created.toString()}"
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       if (comments.isNotEmpty)
-                        Column(
-                          children: [
-                            const SizedBox(height: 16.0),
-                            const Text(
-                              "Comments",
-                              style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                            ),
-                            const SizedBox(height: 8.0),
-                            Expanded(
-                              child: ListView.builder(
-                                  itemCount: comments.length,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    Comment comment = comments[index];
-                                    return Card(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(12.0),
-                                        child: Column(
-                                          children: [
-                                            Text(
-                                              comment.userName,
-                                              style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                                            ),
-                                            const SizedBox(height: 4.0),
-                                            Text(comment.message)
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }
+                        Expanded(
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 16.0),
+                              const Text(
+                                "Comments",
+                                style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
                               ),
-                            ),
-                          ],
+                              const SizedBox(height: 8.0),
+                              Expanded(
+                                child: ListView.builder(
+                                    itemCount: comments.length,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      Comment comment = comments[index];
+                                      return Card(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(12.0),
+                                          child: Column(
+                                            children: [
+                                              Text(
+                                                comment.userName,
+                                                style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+                                              ),
+                                              const SizedBox(height: 4.0),
+                                              Text(comment.message)
+                                            ],
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
+                      const SizedBox(height: 24.0),
+                      SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.redAccent,
+                              ),
+                              onPressed: () => {
+                                Provider.of<TaskDetailViewModel>(context, listen: false).delete(widget.task.id).then((value) => {
+                                  if (value != null) {
+                                    if (value.data != null) {
+                                      Navigator.pop(context)
+                                    } else if (value.errorMessage != null) {
+                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                        content: Text(value.errorMessage ?? 'Something wrong'),
+                                      ))
+                                    }
+                                  }
+                                })
+                              },
+                              child: const Text("Remove Task"))
+                      )
                     ],
                   )
               ),

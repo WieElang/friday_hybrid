@@ -27,13 +27,14 @@ class UserDao {
   }
 
   static schemas.User _createFromApiModel(UserApiModel userApiModel) {
-    return schemas.User(userApiModel.id, userApiModel.name, userApiModel.email);
+    return schemas.User(userApiModel.id, userApiModel.name, userApiModel.email, userApiModel.employeeCode);
   }
 
   static schemas.User _updateFromApiModel(schemas.User existingUser, UserApiModel userApiModel) {
     existingUser.id = userApiModel.id;
     existingUser.name = userApiModel.name;
     existingUser.email = userApiModel.email;
+    existingUser.employeeCode = userApiModel.employeeCode;
     return existingUser;
   }
 }

@@ -29,16 +29,19 @@ class UserApiModel {
   final int id;
   final String name;
   final String email;
+  final String employeeCode;
 
   const UserApiModel({
     required this.id,
     required this.name,
-    required this.email
+    required this.email,
+    required this.employeeCode
   });
 
   factory UserApiModel.fromJson(Map<String, dynamic> json) => UserApiModel(
       id: json["id"],
       name: json["name"],
-      email: json["email"]
+      email: json["email"],
+      employeeCode: json["employee_code"]
   );
 }

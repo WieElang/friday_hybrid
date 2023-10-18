@@ -33,6 +33,11 @@ class TaskDao {
     return realm.query<Task>('id == $id').firstOrNull;
   }
 
+  static void delete(Realm realm, int id) {
+    final task = realm.query<Task>('id == $id').first;
+    realm.delete(task);
+  }
+
   static void fromApiModels(TaskListApiModel taskListApiModel) {
     final realm = realmInstance;
 

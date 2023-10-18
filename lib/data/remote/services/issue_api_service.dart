@@ -39,4 +39,23 @@ class IssueApiService {
       return ApiResponse(null, e.toString());
     }
   }
+
+  static Future<ApiResponse<IssueApiModel>> editStatus(int issueId, int status) async {
+    Map data = {
+      "issue": issueId,
+      "status": status
+    };
+    try {
+      var response = await ApiUtils.createPostRequest(ApiConstants.editStatusIssueEndpoint, data: data);
+      final responseJson = ApiResponseUtils.returnResponse(response);
+      IssueApiModel issueData = IssueApiModel.fromJson(responseJson['issue']);
+      return ApiResponse(issueData, null);
+    } on SocketException {
+      return ApiResponse(null, 'No Internet Connection');
+    } on SessionException catch (e) {
+      return ApiResponse(null, e.message, exception: e);
+    } on Exception catch (e) {
+      return ApiResponse(null, e.toString());
+    }
+  }
 }

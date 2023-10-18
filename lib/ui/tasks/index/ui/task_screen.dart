@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friday_hybrid/core/enums.dart';
 import 'package:friday_hybrid/data/base_data.dart';
 import 'package:friday_hybrid/data/local/schemas.dart';
 import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
@@ -77,7 +78,15 @@ class _TaskScreenState extends State<TaskScreen> with WidgetsBindingObserver {
                       child: Card(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                            child: Text(task.name),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(task.name),
+                                const SizedBox(height: 4.0),
+                                Text(TaskStatus.getStatus(task.statusValue)?.displayName ?? "-")
+                              ]
+                            ),
                           )
                       ),
                     );

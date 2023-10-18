@@ -9,6 +9,7 @@ class _User {
   @PrimaryKey() late int id;
   late String name;
   late String email;
+  late String employeeCode;
 }
 
 @RealmModel()
@@ -31,6 +32,7 @@ class _Issue {
   late int priorityValue;
   late DateTime? deadlineDate;
   late DateTime created;
+  late _Project? project;
 }
 
 @RealmModel()

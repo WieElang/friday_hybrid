@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friday_hybrid/core/enums.dart';
 import 'package:friday_hybrid/ui/issues/details/ui/issue_detail_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -75,7 +76,11 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(issue.title),
-                                Text(issue.statusValue.toString()),
+                                const SizedBox(height: 4.0),
+                                Text("Status: ${IssueStatus.getStatus(issue.statusValue)?.displayName ?? "-"}"),
+                                const SizedBox(height: 4.0),
+                                Text("Priority: ${IssuePriority.getPriority(issue.priorityValue)?.displayName ?? "-"}"),
+                                const SizedBox(height: 12.0),
                                 Text(issue.deadlineDate.toString())
                               ],
                             ),

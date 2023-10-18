@@ -1,5 +1,6 @@
 class ApiConstants {
   static String baseUrl = "127.0.0.1:8000";
+  // static String baseUrl = "10.0.2.2:8000";
 
   // Auth
   static String loginEndpoint = "/api/auth/login";
@@ -16,9 +17,8 @@ class ApiConstants {
   static String tasksEndpoint = "/api/tasks/";
   static String taskDetailEndpoint = "/api/tasks/details";
   static String dailyTaskEndpoint = "/api/tasks/daily";
-  static String addTaskEndpoint = "/api/tasks/add";
-  static String editTaskEndpoint = "/api/tasks/edit";
-  static String editStatusTaskEndpoint = "/api/tasks/edit-status";
+  static String addTaskEndpoint = "/api/tasks/add-task";
+  static String editTaskEndpoint = "/api/tasks/edit-task";
   static String deleteTaskEndpoint = "/api/tasks/delete";
 
   static const String apiToken = "ZnJpZGF5LXRhc2stbWFuYWdlbWVudC1hcHAtc3RhbXBzLWluZG9uZXNpYS0yMDIz=";

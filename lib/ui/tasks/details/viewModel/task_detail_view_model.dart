@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:friday_hybrid/data/local/dao/comment_dao.dart';
 import 'package:friday_hybrid/data/local/dao/task_activity_dao.dart';
 import 'package:friday_hybrid/data/local/realm_database_helper.dart';
+import 'package:friday_hybrid/data/remote/models/auth_api_model.dart';
 import 'package:friday_hybrid/data/repository/task_repository.dart';
 
 import '../../../../data/base_data.dart';
 import '../../../../data/local/schemas.dart';
+import '../../../../data/remote/api_response.dart';
+import '../../../../data/remote/services/task_api_service.dart';
 
 
 class TaskDetailViewModel with ChangeNotifier {
@@ -39,5 +42,9 @@ class TaskDetailViewModel with ChangeNotifier {
       _comments = [];
     }
     notifyListeners();
+  }
+
+  Future<ApiResponse<BaseStatusApiModel>?> delete(int taskId) async {
+    return await TaskApiService.deleteTask(taskId);
   }
 }
