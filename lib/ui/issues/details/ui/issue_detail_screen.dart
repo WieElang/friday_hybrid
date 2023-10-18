@@ -178,6 +178,11 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                             child: Column(
                               children: [
                                 const SizedBox(height: 16.0),
+                                const Text(
+                                  "Activities",
+                                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                                ),
+                                const SizedBox(height: 8.0),
                                 Expanded(
                                   child: ListView.builder(
                                       itemCount: activities.length,

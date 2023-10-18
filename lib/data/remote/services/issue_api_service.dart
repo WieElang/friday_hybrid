@@ -46,6 +46,7 @@ class IssueApiService {
       "issue": issueId,
       "status": status
     };
+    print(data);
     try {
       var response = await ApiUtils.createPostRequest(ApiConstants.editStatusIssueEndpoint, data: data);
       final responseJson = ApiResponseUtils.returnResponse(response);

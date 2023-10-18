@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:friday_hybrid/core/enums.dart';
 import 'package:friday_hybrid/ui/issues/details/viewModel/issue_detail_view_model.dart';
 import 'package:friday_hybrid/ui/issues/form/viewModel/issue_form_view_model.dart';
-import 'package:friday_hybrid/ui/issues/index/viewModel/issue_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/local/schemas.dart';
@@ -16,11 +15,17 @@ class IssueFormScreen extends StatefulWidget {
 }
 
 class _IssueFormScreenState extends State<IssueFormScreen> {
+  IssueStatus? selectedStatus;
+  bool isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedStatus = IssueStatus.getStatus(widget.issue.statusValue);
+  }
 
   @override
   Widget build(BuildContext context) {
-    IssueStatus selectedStatus = IssueStatus.getStatus(widget.issue.statusValue ?? 1)!;
-
     return Scaffold(
         body: SafeArea(
           child: NestedScrollView(
@@ -87,7 +92,7 @@ class _IssueFormScreenState extends State<IssueFormScreen> {
                               )
                           ),
                           onPressed: () {
-                            Provider.of<IssueFormViewModel>(context, listen: false).edit(widget.issue.id, selectedStatus.value).then((value) => {
+                            Provider.of<IssueFormViewModel>(context, listen: false).edit(widget.issue.id, selectedStatus!.value).then((value) => {
                               if (value != null) {
                                 if (value.data != null) {
                                   Navigator.pop(context),
