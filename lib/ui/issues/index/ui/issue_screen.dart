@@ -16,29 +16,12 @@ class IssueScreen extends StatefulWidget {
   State<IssueScreen> createState() => _IssueScreenState();
 }
 
-class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
+class _IssueScreenState extends State<IssueScreen> {
 
   @override
   void initState() {
-    // Add the observer.
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
     Provider.of<IssueViewModel>(context, listen: false).getIssues();
-  }
-
-  @override
-  void dispose() {
-    // Remove the observer
-    WidgetsBinding.instance.removeObserver(this);
-
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Provider.of<IssueViewModel>(context, listen: false).getIssues();
-    }
   }
 
   void _onSelectedIssue(Issue issue) {
@@ -104,7 +87,9 @@ class _IssueScreenState extends State<IssueScreen> with WidgetsBindingObserver {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const LoginScreen())
-                              )
+                              ).then((value) => {
+                                Provider.of<IssueViewModel>(context, listen: false).getIssues()
+                              })
                             },
                             child: const Text('Login Again')
                         )

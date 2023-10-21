@@ -14,28 +14,12 @@ class DailyTaskScreen extends StatefulWidget {
   State<DailyTaskScreen> createState() => _DailyTaskScreenState();
 }
 
-class _DailyTaskScreenState extends State<DailyTaskScreen> with WidgetsBindingObserver {
+class _DailyTaskScreenState extends State<DailyTaskScreen> {
 
   @override
   void initState() {
-    // Add the observer.
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
-
     Provider.of<DailyTaskViewModel>(context, listen: false).getTasks();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Provider.of<DailyTaskViewModel>(context, listen: false).getTasks();
-    }
   }
 
   void _onSelectedTask(Task task) {
@@ -89,7 +73,9 @@ class _DailyTaskScreenState extends State<DailyTaskScreen> with WidgetsBindingOb
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(builder: (context) => const LoginScreen())
-                              )
+                              ).then((value) => {
+                                Provider.of<DailyTaskViewModel>(context, listen: false).getTasks()
+                              })
                             },
                             child: const Text('Login Again')
                         )

@@ -13,30 +13,12 @@ class AccountScreen extends StatefulWidget {
   State<AccountScreen> createState() => _AccountScreenState();
 }
 
-class _AccountScreenState extends State<AccountScreen> with WidgetsBindingObserver {
+class _AccountScreenState extends State<AccountScreen> {
 
   @override
   void initState() {
-    // Add the observer.
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
-
     Provider.of<AccountViewModel>(context, listen: false).setUser();
-  }
-
-  @override
-  void dispose() {
-    // Remove the observer
-    WidgetsBinding.instance.removeObserver(this);
-
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Provider.of<AccountViewModel>(context, listen: false).setUser();
-    }
   }
 
   void _onLogoutPressed() {
@@ -46,7 +28,9 @@ class _AccountScreenState extends State<AccountScreen> with WidgetsBindingObserv
           Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const LoginScreen())
-          )
+          ).then((value) => {
+            Provider.of<AccountViewModel>(context, listen: false).setUser()
+          })
         } else if (value.errorMessage != null) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(value.errorMessage ?? 'Something wrong'),

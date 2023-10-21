@@ -17,21 +17,12 @@ class TaskScreen extends StatefulWidget {
   State<TaskScreen> createState() => _TaskScreenState();
 }
 
-class _TaskScreenState extends State<TaskScreen> with WidgetsBindingObserver {
+class _TaskScreenState extends State<TaskScreen> {
 
   @override
   void initState() {
-    // Add the observer.
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
-
     Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
   }
 
   @override
@@ -52,7 +43,9 @@ class _TaskScreenState extends State<TaskScreen> with WidgetsBindingObserver {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.project))
-    );
+    ).then((value) => {
+      Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id)
+    });
   }
 
   @override

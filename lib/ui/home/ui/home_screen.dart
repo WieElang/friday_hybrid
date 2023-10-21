@@ -15,28 +15,12 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // Add the observer.
-    WidgetsBinding.instance.addObserver(this);
     super.initState();
-
     Provider.of<HomeViewModel>(context, listen: false).getProjects();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Provider.of<HomeViewModel>(context, listen: false).getProjects();
-    }
   }
 
   void _onSelectedProject(Project project) {
@@ -90,7 +74,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => const LoginScreen())
-                            )
+                            ).then((value) => {
+                              Provider.of<HomeViewModel>(context, listen: false).getProjects()
+                            })
                           },
                           child: const Text('Login Again')
                       )

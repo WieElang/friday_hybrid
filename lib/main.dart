@@ -1,3 +1,4 @@
+import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
 import 'package:friday_hybrid/ui/accounts/ui/account_screen.dart';
 import 'package:friday_hybrid/ui/accounts/viewModel/account_view_model.dart';
@@ -14,12 +15,26 @@ import 'package:friday_hybrid/ui/login/viewModel/login_view_model.dart';
 import 'package:friday_hybrid/ui/tasks/details/viewModel/task_detail_view_model.dart';
 import 'package:friday_hybrid/ui/tasks/form/viewModel/task_form_view_model.dart';
 import 'package:friday_hybrid/ui/tasks/index/viewModel/task_view_model.dart';
+import 'package:friday_hybrid/utils/alarm_utils.dart';
 import 'package:provider/provider.dart';
 
 import 'core/session.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setupAlarm();
   runApp(const MyApp());
+}
+
+void setupAlarm() async {
+  await Alarm.init();
+  AlarmUtils.stopAlarm();
+
+  var now = DateTime.now();
+  AlarmUtils.setAlarm(
+      DateTime(now.year, now.month, now.day, 16, 0, 0),
+      "Daily Meeting", "Please update your daily task"
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -71,7 +86,9 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const LoginScreen())
-        );
+        ).then((value) => {
+          Provider.of<HomeViewModel>(context, listen: false).getProjects()
+        });
       }
     });
   }
