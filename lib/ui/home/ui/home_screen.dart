@@ -20,6 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<HomeViewModel>(context, listen: false).getUser();
     Provider.of<HomeViewModel>(context, listen: false).getProjects();
   }
 
@@ -32,59 +33,112 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    User? user = Provider.of<HomeViewModel>(context).user;
     BaseData<List<Project>> projectData = Provider.of<HomeViewModel>(context).baseData;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Home"),
-        backgroundColor: Colors.transparent,
-        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-        centerTitle: false,
-      ),
-      body: Column(
-        children: <Widget>[
-          projectData.data != null
-              ? Expanded(
-                child: ListView.builder(
-                    itemCount: projectData.data!.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Project project = projectData.data![index];
-                      return InkWell(
-                        onTap: () => _onSelectedProject(project),
-                        child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                              child: Text(project.name),
-                            )
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  title: Row(
+                    children: [
+                      const Text("Hi, ", style: TextStyle(fontSize: 14.0)),
+                      Text(
+                        "${user?.name ?? "Guest"}!",
+                        style: const TextStyle(
+                            fontSize: 14.0,
+                            color: Colors.orange
                         ),
-                      );
-                    }
-                ))
-              : const Expanded(child: Center(
-                  child: Text('No Data'),
-                )),
-          Expanded(
-              child: Center(
+                      )
+                    ],
+                  ),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  centerTitle: false,
+                  floating: true,
+                  snap: true,
+                  expandedHeight: 0.0,
+                  forceElevated: innerBoxIsScrolled,
+                  actions: const [],
+                ),
+              ),
+            ];
+          },
+          body: Column(
+            children: <Widget>[
+              Flexible(
                 child: Column(
                   children: [
-                    if (projectData.errorMessage != null)
-                      Text(projectData.errorMessage!),
-                    if (projectData.exception is SessionException)
-                      ElevatedButton(
-                          onPressed: () => {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => const LoginScreen())
-                            ).then((value) => {
-                              Provider.of<HomeViewModel>(context, listen: false).getProjects()
-                            })
-                          },
-                          child: const Text('Login Again')
-                      )
+                    projectData.data != null
+                        ? Flexible(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text("Projects",
+                                  style: TextStyle(
+                                      fontSize: 20.0,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                                const SizedBox(height: 14.0),
+                                Flexible(
+                                  child: ListView.builder(
+                                      itemCount: projectData.data!.length,
+                                      itemBuilder: (BuildContext context, int index) {
+                                        Project project = projectData.data![index];
+                                        return InkWell(
+                                          onTap: () => _onSelectedProject(project),
+                                          child: Card(
+                                              child: Padding(
+                                                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 22.0),
+                                                child: Text(project.name),
+                                              )
+                                          ),
+                                        );
+                                      }
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                        : const Center(
+                            child: Text('No Data'),
+                          ),
                   ],
+                ),
+              ),
+              if (projectData.errorMessage != null || projectData.exception is SessionException)
+                Flexible(
+                  child: Center(
+                    child: Column(
+                      children: [
+                        if (projectData.errorMessage != null)
+                          Text(projectData.errorMessage!),
+                        if (projectData.exception is SessionException)
+                          ElevatedButton(
+                              onPressed: () => {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => const LoginScreen())
+                                ).then((value) => {
+                                  Provider.of<HomeViewModel>(context, listen: false).getProjects()
+                                })
+                              },
+                              child: const Text('Login Again')
+                          )
+                      ],
+                    )
+                  ),
                 )
-              )
-          )
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }

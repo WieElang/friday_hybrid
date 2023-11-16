@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:friday_hybrid/core/enums.dart';
 import 'package:friday_hybrid/ui/issues/details/viewModel/issue_detail_view_model.dart';
 import 'package:friday_hybrid/ui/issues/form/viewModel/issue_form_view_model.dart';
+import 'package:friday_hybrid/utils/display_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/local/schemas.dart';
@@ -34,9 +35,9 @@ class _IssueFormScreenState extends State<IssueFormScreen> {
                 SliverOverlapAbsorber(
                   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                   sliver: SliverAppBar(
-                    title: const Text("Edit Issue"),
+                    title: const Text("Update Issue"),
                     backgroundColor: Colors.transparent,
-                    elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+                    elevation: 0.0,
                     centerTitle: false,
                     floating: true,
                     snap: true,
@@ -95,8 +96,14 @@ class _IssueFormScreenState extends State<IssueFormScreen> {
                             Provider.of<IssueFormViewModel>(context, listen: false).edit(widget.issue.id, selectedStatus!.value).then((value) => {
                               if (value != null) {
                                 if (value.data != null) {
-                                  Navigator.pop(context),
-                                  Provider.of<IssueDetailViewModel>(context, listen: false).getIssue(widget.issue.id)
+                                  Provider.of<IssueDetailViewModel>(context, listen: false).getIssue(widget.issue.id),
+                                  DisplayUtils.showAlert(context,
+                                      "Update Issue",
+                                      "Issue updated successfully", () => {
+                                        Navigator.pop(context),
+                                      },
+                                      isDismissible: false
+                                  )
                                 } else if (value.errorMessage != null) {
                                   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                                     content: Text(value.errorMessage ?? 'Something wrong'),
@@ -106,7 +113,7 @@ class _IssueFormScreenState extends State<IssueFormScreen> {
                             });
                           },
                           child: const Text(
-                            "Edit Issue",
+                            "Update",
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,

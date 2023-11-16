@@ -28,13 +28,25 @@ void main() {
 
 void setupAlarm() async {
   await Alarm.init();
-  AlarmUtils.stopAlarm();
+  AlarmUtils.stopAllAlarm();
 
   var now = DateTime.now();
-  AlarmUtils.setAlarm(
-      DateTime(now.year, now.month, now.day, 16, 0, 0),
-      "Daily Meeting", "Please update your daily task"
-  );
+  int day = now.weekday;
+  if (![DateTime.saturday, DateTime.sunday].contains(day)) {
+    // Set Morning Alarm
+    AlarmUtils.setAlarm(
+        AlarmUtils.morningAlarmId,
+        DateTime(now.year, now.month, now.day, 9, 0, 0).toLocal(),
+        "Be Ready For Work", "Please check your task and issue"
+    );
+
+    // Set Afternoon Alarm
+    AlarmUtils.setAlarm(
+        AlarmUtils.afternoonAlarmId,
+        DateTime(now.year, now.month, now.day, 16, 30, 0).toLocal(),
+        "End Of Day", "Please update your task"
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -57,10 +69,12 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Friday',
         theme: ThemeData(
             primarySwatch: Colors.orange,
-            brightness: Brightness.dark
+            brightness: Brightness.dark,
+            fontFamily: 'Poppins'
         ),
         home: const HomeBottomNavigationBar(),
       ),

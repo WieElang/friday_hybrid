@@ -69,12 +69,20 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                   sliver: SliverAppBar(
                     title: const Text("Issue Detail"),
                     backgroundColor: Colors.transparent,
-                    elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+                    elevation: 0.0,
                     centerTitle: false,
                     floating: true,
                     snap: true,
                     expandedHeight: 0.0,
                     forceElevated: innerBoxIsScrolled,
+                    actions: [
+                      IconButton(
+                          onPressed: () => _onEditIssue(),
+                          icon: const Icon(Icons.edit,
+                            color: Colors.orange,
+                          )
+                      ),
+                    ],
                   ),
                 ),
               ];
@@ -84,9 +92,9 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                 Expanded(
                     child: Column(
                       children: [
-                        Expanded(
-                          child: SizedBox(
-                            width: double.infinity,
+                        SizedBox(
+                          width: double.infinity,
+                          child: Expanded(
                             child: Card(
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -116,7 +124,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                                     Text(issueData.data?.description ?? "-"),
                                     const SizedBox(height: 16.0),
                                     Text("Related Link: ${issueData.data?.link ?? "-"}"),
-                                    const SizedBox(height: 24.0),
+                                    const SizedBox(height: 16.0),
                                     Text("Created: ${issueData.data?.created.toString()}"),
                                   ],
                                 ),
@@ -129,7 +137,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                           Expanded(
                             child: Column(
                               children: [
-                                const SizedBox(height: 16.0),
+                                const SizedBox(height: 8.0),
                                 const Text(
                                   "Checklists",
                                   style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
@@ -224,11 +232,6 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
               ],
             ),
           )
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _onEditIssue(),
-        backgroundColor: Colors.orangeAccent,
-        child: const Icon(Icons.edit),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:friday_hybrid/data/local/schemas.dart';
 import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:friday_hybrid/ui/tasks/details/viewModel/task_detail_view_model.dart';
+import 'package:friday_hybrid/utils/display_utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../form/ui/task_form_screen.dart';
@@ -28,27 +29,30 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
     Provider.of<TaskDetailViewModel>(context, listen: false).getTask(widget.task.id);
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Provider.of<TaskDetailViewModel>(context, listen: false).getTask(widget.task.id);
-    }
-  }
-  
-  void _onEditStatusTask(int? status) {
-    print(status.toString());
-  }
-
   void _onEditTask() {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.task.project!, task: widget.task))
+    );
+  }
+
+  void _onDeleteTask() {
+    DisplayUtils.showAlert(
+        context,
+        "Delete Task",
+        "Do you want to delete this task ?", () => {
+          Provider.of<TaskDetailViewModel>(context, listen: false).delete(widget.task.id).then((value) => {
+            if (value != null) {
+              if (value.data != null) {
+                  Navigator.pop(context)
+                } else if (value.errorMessage != null) {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(value.errorMessage ?? 'Something wrong'),
+                ))
+              }
+            }
+          })
+        }
     );
   }
 
@@ -68,12 +72,26 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
                 sliver: SliverAppBar(
                   title: const Text("Task Detail"),
                   backgroundColor: Colors.transparent,
-                  elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+                  elevation: 0.0,
                   centerTitle: false,
                   floating: true,
                   snap: true,
                   expandedHeight: 0.0,
                   forceElevated: innerBoxIsScrolled,
+                  actions: [
+                    IconButton(
+                        onPressed: () => _onEditTask(),
+                        icon: const Icon(Icons.edit,
+                          color: Colors.orange,
+                        )
+                    ),
+                    IconButton(
+                        onPressed: () => _onDeleteTask(),
+                        icon: const Icon(Icons.delete,
+                          color: Colors.redAccent,
+                        )
+                    )
+                  ],
                 ),
               ),
             ];
@@ -176,28 +194,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
                             ],
                           ),
                         ),
-                      const SizedBox(height: 24.0),
-                      SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.redAccent,
-                              ),
-                              onPressed: () => {
-                                Provider.of<TaskDetailViewModel>(context, listen: false).delete(widget.task.id).then((value) => {
-                                  if (value != null) {
-                                    if (value.data != null) {
-                                      Navigator.pop(context)
-                                    } else if (value.errorMessage != null) {
-                                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                        content: Text(value.errorMessage ?? 'Something wrong'),
-                                      ))
-                                    }
-                                  }
-                                })
-                              },
-                              child: const Text("Remove Task"))
-                      )
                     ],
                   )
               ),
@@ -222,11 +218,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
             ],
           ),
         )
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _onEditTask(),
-        backgroundColor: Colors.orangeAccent,
-        child: const Icon(Icons.edit),
       ),
     );
   }

@@ -39,6 +39,13 @@ class _TaskScreenState extends State<TaskScreen> {
     );
   }
 
+  void _onEditTask(Task task) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.project, task: task))
+    );
+  }
+
   void _onAddTask() {
     Navigator.push(
         context,
@@ -52,68 +59,145 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     BaseData<List<Task>> taskData = Provider.of<TaskViewModel>(context).baseData;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.project.name),
-        backgroundColor: Colors.transparent,
-        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
-        centerTitle: false,
-      ),
-      body: Column(
-        children: <Widget>[
-          taskData.data != null && taskData.data!.isNotEmpty
-              ? Expanded(
-                child: ListView.builder(
-                  itemCount: taskData.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Task task = taskData.data![index];
-                    return InkWell(
-                      onTap: () => _onSelectedTask(task),
-                      child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(task.name),
-                                const SizedBox(height: 4.0),
-                                Text(TaskStatus.getStatus(task.statusValue)?.displayName ?? "-")
-                              ]
-                            ),
-                          )
-                      ),
-                    );
-                  }
-                ))
-              : const Expanded(child: Center(
-                  child: Text('No Data'),
-                )),
-          Expanded(
-              child: Center(
-                  child: Column(
-                    children: [
-                      if (taskData.errorMessage != null)
-                        Text(taskData.errorMessage!),
-                      if (taskData.exception is SessionException)
-                        ElevatedButton(
-                            onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const LoginScreen())
-                              )
-                            },
-                            child: const Text('Login Again')
+      body: SafeArea(
+        child: NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget> [
+              SliverOverlapAbsorber(
+                handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+                sliver: SliverAppBar(
+                  title: Text(widget.project.name,
+                      style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.w600
+                      )
+                  ),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                  centerTitle: false,
+                  floating: true,
+                  snap: true,
+                  expandedHeight: 0.0,
+                  forceElevated: innerBoxIsScrolled,
+                  actions: const [],
+                ),
+              ),
+            ];
+          },
+          body: Column(
+            children: <Widget>[
+              Flexible(
+                child: Column(
+                  children: [
+                    Flexible(
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  const Text("Tasks",
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  const Spacer(),
+                                  OutlinedButton(
+                                    onPressed: () => _onAddTask(),
+                                    style: OutlinedButton.styleFrom(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(5.0)
+                                        ),
+                                        side: const BorderSide(
+                                            color: Colors.orange,
+                                            width: 1.0
+                                        )
+                                    ),
+                                    child: const Text(
+                                      "Add Task",
+                                      style: TextStyle(
+                                          fontSize: 12.0,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.orange
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 14.0),
+                              taskData.data != null && taskData.data!.isNotEmpty
+                                ? Flexible(
+                                    child: ListView.builder(
+                                        itemCount: taskData.data!.length,
+                                        itemBuilder: (BuildContext context, int index) {
+                                          Task task = taskData.data![index];
+                                          return InkWell(
+                                            onTap: () => _onSelectedTask(task),
+                                            onLongPress: () => _onEditTask(task),
+                                            child: Card(
+                                                child: Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                                                  child: Column(
+                                                      mainAxisAlignment: MainAxisAlignment.start,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Text(
+                                                          TaskStatus.getStatus(task.statusValue)?.displayName ?? "-",
+                                                          style: const TextStyle(
+                                                            fontSize: 10.0,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(height: 2.0),
+                                                        Text(
+                                                          task.name,
+                                                          style: const TextStyle(
+                                                              fontSize: 14.0,
+                                                              fontWeight: FontWeight.w600
+                                                          ),
+                                                        ),
+                                                      ]
+                                                  ),
+                                                )
+                                            ),
+                                          );
+                                        }
+                                    ),
+                                  )
+                                : const Center(
+                                    child: Text('No Data')
+                                ),
+                            ],
+                          ),
                         )
-                    ],
-                  )
-              )
-          )
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _onAddTask(),
-        backgroundColor: Colors.orangeAccent,
-        child: const Icon(Icons.add),
+                    )
+                  ],
+                ),
+              ),
+              if (taskData.errorMessage != null || taskData.exception is SessionException)
+                Flexible(
+                  child: Center(
+                      child: Column(
+                        children: [
+                          if (taskData.errorMessage != null)
+                            Text(taskData.errorMessage!),
+                          if (taskData.exception is SessionException)
+                            ElevatedButton(
+                                onPressed: () => {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => const LoginScreen())
+                                  )
+                                },
+                                child: const Text('Login Again')
+                            )
+                        ],
+                      )
+                  ),
+                )
+            ],
+          ),
+        ),
       ),
     );
   }

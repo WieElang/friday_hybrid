@@ -22,19 +22,47 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text(
-                'Sign In',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24.0
-                ),
+              Image.asset('assets/images/friday_logo.png',
+                width: 40.0,
+                height: 53.0,
+                fit: BoxFit.cover
+              ),
+              const SizedBox(
+                height: 14.0,
+              ),
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Login to ',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                      fontSize: 20.0
+                    ),
+                  ),
+                  Text(
+                    'Friday',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 20.0,
+                        color: Colors.orange
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 26),
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: BorderSide(
+                      width: 1.0,
+                      color: Colors.grey
+                    )
+                  ),
                   labelText: 'Email',
                 ),
+                style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 20),
               TextField(
@@ -43,8 +71,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 autocorrect: false,
                 controller: _passwordController,
                 decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(
+                            width: 1.0,
+                            color: Colors.grey
+                        )
+                    ),
                   labelText: 'Password'
                 ),
+                style: const TextStyle(fontSize: 14.0),
               ),
               const SizedBox(height: 26),
               SizedBox(
@@ -53,7 +88,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16.0),
+                          borderRadius: BorderRadius.circular(5.0),
                         )
                     ),
                     onPressed: () {
@@ -86,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
-                          fontSize: 16.0
+                          fontSize: 14.0
                       ),
                     )
                 ),
