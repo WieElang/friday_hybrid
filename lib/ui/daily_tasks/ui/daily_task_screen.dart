@@ -56,7 +56,7 @@ class _DailyTaskScreenState extends State<DailyTaskScreen> {
               )
             ),
             Text(utils.DateUtils.formatToDisplayString(today),
-              style: const TextStyle(fontSize: 10.0),
+              style: const TextStyle(fontSize: 12.0),
             ),
           ],
         ),
@@ -81,6 +81,8 @@ class _DailyTaskScreenState extends State<DailyTaskScreen> {
                               onTap: () => _onSelectedTask(task),
                               onLongPress: () => _onEditTask(task),
                               child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  color: const Color(0xFF363232),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                                     child: Text(task.name),
@@ -90,7 +92,10 @@ class _DailyTaskScreenState extends State<DailyTaskScreen> {
                           }
                       ),
                     ))
-                    : const Center(child: Text('No Data')),
+                    : const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: Text('No Data')),
+                    ),
               ],
             ),
           ),

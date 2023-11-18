@@ -10,7 +10,7 @@ class DateUtils {
     return DateTime.parse(dateTime);
   }
 
-  static String formatToDisplayString(DateTime dateTime, {String format = "EEEE,dd MMMM yyyy"}) {
+  static String formatToDisplayString(DateTime dateTime, {String format = "EEEE, dd MMMM yyyy"}) {
     final DateFormat formatter = DateFormat(format);
     return formatter.format(dateTime);
   }

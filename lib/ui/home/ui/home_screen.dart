@@ -85,6 +85,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.w600
                                   ),
                                 ),
+                                const SizedBox(height: 2.0),
+                                Text("${projectData.data?.length ?? 0} active projects",
+                                  style: const TextStyle(fontSize: 12),
+                                ),
                                 const SizedBox(height: 14.0),
                                 Flexible(
                                   child: ListView.builder(
@@ -94,8 +98,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return InkWell(
                                           onTap: () => _onSelectedProject(project),
                                           child: Card(
+                                              margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                              color: const Color(0xFF363232),
                                               child: Padding(
-                                                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 22.0),
+                                                padding: const EdgeInsets.symmetric(vertical: 24.0, horizontal: 16.0),
                                                 child: Text(project.name),
                                               )
                                           ),
@@ -107,9 +113,12 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                         )
-                        : const Center(
-                            child: Text('No Data'),
-                          ),
+                        : const Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(
+                              child: Text('No Data'),
+                            ),
+                        ),
                   ],
                 ),
               ),

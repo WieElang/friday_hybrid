@@ -44,11 +44,21 @@ class _IssueScreenState extends State<IssueScreen> {
     BaseData<List<Issue>> issueData = Provider.of<IssueViewModel>(context).baseData;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Your Issues",
-            style: TextStyle(
-                fontSize: 20.0,
-                fontWeight: FontWeight.w600
-            )
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Your Issues",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600
+                )
+            ),
+            const SizedBox(height: 2.0),
+            Text("${issueData.data?.length ?? 0} active issues",
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
         ),
         backgroundColor: Colors.transparent,
         elevation: 0.0,
@@ -71,6 +81,8 @@ class _IssueScreenState extends State<IssueScreen> {
                               onTap: () => _onSelectedIssue(issue),
                               onLongPress: () => _onEditIssue(issue),
                               child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  color: const Color(0xFF363232),
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                                     child: Column(
@@ -80,7 +92,7 @@ class _IssueScreenState extends State<IssueScreen> {
                                         Text(
                                           TaskStatus.getStatus(issue.statusValue)?.displayName ?? "-",
                                           style: const TextStyle(
-                                            fontSize: 10.0,
+                                            fontSize: 12.0,
                                           ),
                                         ),
                                         const SizedBox(height: 2.0),
@@ -99,7 +111,10 @@ class _IssueScreenState extends State<IssueScreen> {
                           }
                       ),
                     ))
-                    : const Center(child: Text('No Data')),
+                    : const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: Text('No Data')),
+                    ),
               ],
             ),
           ),

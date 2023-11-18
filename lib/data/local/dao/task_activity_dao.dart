@@ -16,7 +16,7 @@ class TaskActivityDao {
   }
 
   static RealmResults<TaskActivity> getByTask(Realm realm, int taskId) {
-    return realm.query<TaskActivity>('task.id == $taskId');
+    return realm.query<TaskActivity>('task.id == $taskId SORT(created DESC)');
   }
 
   static RealmResults<TaskActivity> getTodayActivities(Realm realm) {

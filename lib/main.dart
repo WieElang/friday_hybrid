@@ -1,5 +1,6 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:friday_hybrid/ui/accounts/ui/account_screen.dart';
 import 'package:friday_hybrid/ui/accounts/viewModel/account_view_model.dart';
 import 'package:friday_hybrid/ui/daily_tasks/ui/daily_task_screen.dart';
@@ -22,7 +23,7 @@ import 'core/session.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setupAlarm();
+  // setupAlarm();
   runApp(const MyApp());
 }
 
@@ -55,6 +56,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
@@ -73,9 +76,17 @@ class MyApp extends StatelessWidget {
         title: 'Friday',
         theme: ThemeData(
             primarySwatch: Colors.orange,
-            brightness: Brightness.dark,
-            fontFamily: 'Poppins'
+            brightness: Brightness.light,
+            fontFamily: 'Poppins',
+            scaffoldBackgroundColor: Colors.white
         ),
+        darkTheme: ThemeData(
+            primarySwatch: Colors.orange,
+            brightness: Brightness.dark,
+            fontFamily: 'Poppins',
+            scaffoldBackgroundColor: Colors.black
+        ),
+        themeMode: ThemeMode.dark,
         home: const HomeBottomNavigationBar(),
       ),
     );
@@ -133,6 +144,7 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),

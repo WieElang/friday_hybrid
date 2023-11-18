@@ -95,12 +95,23 @@ class _TaskScreenState extends State<TaskScreen> {
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  const Text("Tasks",
-                                    style: TextStyle(
-                                        fontSize: 20.0,
-                                        fontWeight: FontWeight.w600
-                                    ),
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Tasks",
+                                        style: TextStyle(
+                                            fontSize: 20.0,
+                                            fontWeight: FontWeight.w600
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2.0),
+                                      Text("${taskData.data?.length ?? 0} active tasks",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ],
                                   ),
                                   const Spacer(),
                                   OutlinedButton(
@@ -136,6 +147,8 @@ class _TaskScreenState extends State<TaskScreen> {
                                             onTap: () => _onSelectedTask(task),
                                             onLongPress: () => _onEditTask(task),
                                             child: Card(
+                                                margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                                color: const Color(0xFF363232),
                                                 child: Padding(
                                                   padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
                                                   child: Column(
@@ -145,7 +158,7 @@ class _TaskScreenState extends State<TaskScreen> {
                                                         Text(
                                                           TaskStatus.getStatus(task.statusValue)?.displayName ?? "-",
                                                           style: const TextStyle(
-                                                            fontSize: 10.0,
+                                                            fontSize: 12.0,
                                                           ),
                                                         ),
                                                         const SizedBox(height: 2.0),
@@ -164,8 +177,11 @@ class _TaskScreenState extends State<TaskScreen> {
                                         }
                                     ),
                                   )
-                                : const Center(
-                                    child: Text('No Data')
+                                : const Padding(
+                                  padding: EdgeInsets.all(16.0),
+                                  child: Center(
+                                      child: Text('No Data')
+                                  ),
                                 ),
                             ],
                           ),

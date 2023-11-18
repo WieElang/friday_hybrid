@@ -62,7 +62,7 @@ class _AccountScreenState extends State<AccountScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Card(
-                  color: Colors.transparent,
+                  color: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5.0),
                     side: const BorderSide(
@@ -81,7 +81,7 @@ class _AccountScreenState extends State<AccountScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(user?.employeeCode ?? '-',
-                              style: const TextStyle(fontSize: 10.0),
+                              style: const TextStyle(fontSize: 12.0),
                             ),
                             const SizedBox(height: 2.0),
                             Text(user?.name ?? 'Unknown',
@@ -93,7 +93,7 @@ class _AccountScreenState extends State<AccountScreen> {
                             ),
                             const SizedBox(height: 2.0),
                             Text(user?.email ?? 'Unknown',
-                              style: const TextStyle(fontSize: 10.0),
+                              style: const TextStyle(fontSize: 12.0),
                             ),
                           ],
                         )
@@ -124,7 +124,7 @@ class _AccountScreenState extends State<AccountScreen> {
               ),
               const SizedBox(height: 4.0),
               const Text("v1.0 (1)",
-                style: TextStyle(fontSize: 10.0),
+                style: TextStyle(fontSize: 12.0),
               )
             ],
           ),

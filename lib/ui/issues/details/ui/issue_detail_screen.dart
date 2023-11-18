@@ -7,6 +7,8 @@ import 'package:friday_hybrid/ui/issues/details/viewModel/issue_detail_view_mode
 import 'package:friday_hybrid/ui/issues/form/ui/issue_form_screen.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:provider/provider.dart';
+import 'package:friday_hybrid/utils/date_utils.dart' as utils;
+import '../../../../utils/display_utils.dart';
 
 class IssueDetailScreen extends StatefulWidget {
   final Issue issue;
@@ -67,7 +69,6 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                 SliverOverlapAbsorber(
                   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                   sliver: SliverAppBar(
-                    title: const Text("Issue Detail"),
                     backgroundColor: Colors.transparent,
                     elevation: 0.0,
                     centerTitle: false,
@@ -89,120 +90,248 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
             },
             body: Column(
               children: <Widget>[
-                Expanded(
+                Flexible(
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SizedBox(
-                          width: double.infinity,
-                          child: Expanded(
-                            child: Card(
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      issueData.data?.title ?? "-",
-                                      style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    Card(
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                            child: Text(IssueStatus.getStatus(issueData.data?.statusValue ?? 0)?.displayName ?? "-")
-                                        )
-                                    ),
-                                    const SizedBox(height: 4.0),
-                                    Card(
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-                                            child: Text(IssuePriority.getPriority(issueData.data?.priorityValue ?? 0)?.displayName ?? "-")
-                                        )
-                                    ),
-                                    const SizedBox(height: 16.0),
-                                    Text(issueData.data?.description ?? "-"),
-                                    const SizedBox(height: 16.0),
-                                    Text("Related Link: ${issueData.data?.link ?? "-"}"),
-                                    const SizedBox(height: 16.0),
-                                    Text("Created: ${issueData.data?.created.toString()}"),
-                                  ],
+                        Padding(
+                          padding: const EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 25),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(issueData.data?.project?.name ?? "Project",
+                                style: const TextStyle(
+                                    fontSize: 12.0
                                 ),
                               ),
-                            ),
+                              const SizedBox(height: 8),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(issueData.data?.title ?? "-",
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20.0
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4.0),
+                                  if (issueData.data != null && issueData.data!.link != null && issueData.data!.link!.isNotEmpty)
+                                    IconButton(
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () => DisplayUtils.launchURL(issueData.data!.link!),
+                                        icon: const Icon(Icons.open_in_new,
+                                          size: 20.0,
+                                          color: Colors.blue,
+                                        )
+                                    )
+                                ],
+                              ),
+                              const SizedBox(height: 10.0),
+                              Row(
+                                children: [
+                                  Card(
+                                    color: Colors.orangeAccent,
+                                    margin: EdgeInsets.zero,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5.0)
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          const Icon(Icons.remove,
+                                            color: Colors.white,
+                                          ),
+                                          const SizedBox(width: 2),
+                                          Text(IssuePriority.getPriority(issueData.data?.priorityValue ?? 0)?.displayName ?? "-",
+                                            style: const TextStyle(fontSize: 12),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Card(
+                                    color: const Color(0xFF363232),
+                                    margin: EdgeInsets.zero,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(25.0),
+                                      side: const BorderSide(
+                                          color: Color(0xFFC7D6FF),
+                                          width: 1.0
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                                      child: Text(IssueStatus.getStatus(issueData.data?.statusValue ?? 0)?.displayName ?? "-",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 10.0),
+                              Row(
+                                children: [
+                                  const Text("Created on",
+                                    style: TextStyle(
+                                        fontSize: 12
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4.0),
+                                  Text(utils.DateUtils.formatToDisplayString(issueData.data?.created ?? DateTime.now()),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 10.0),
+                              Row(
+                                children: [
+                                  const Text("Due on",
+                                    style: TextStyle(
+                                        fontSize: 12
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4.0),
+                                  Text(utils.DateUtils.formatToDisplayString(issueData.data?.deadlineDate ?? DateTime.now()),
+                                    style: const TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
                           ),
                         ),
-
+                        const Divider(thickness: 1, color: Colors.grey),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text("Issue Detail",
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600
+                                ),
+                              ),
+                              const SizedBox(height: 16),
+                              Text(issueData.data?.description ?? "-")
+                            ],
+                          ),
+                        ),
                         if (checklists.isNotEmpty)
-                          Expanded(
+                          Flexible(
                             child: Column(
                               children: [
-                                const SizedBox(height: 8.0),
-                                const Text(
-                                  "Checklists",
-                                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Expanded(
-                                  child: ListView.builder(
-                                      itemCount: checklists.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        IssueChecklist checklist = checklists[index];
-                                        return Card(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(12.0),
-                                            child: Row(
-                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                              children: [
-                                                Checkbox(
-                                                    value: checklist.isChecked,
-                                                    onChanged: (bool? isChecked) => _onCheckEditTask(checklist.id)
-                                                ),
-                                                Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      checklist.name ?? "-",
-                                                      style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
-                                                    ),
-                                                    const SizedBox(height: 4.0),
-                                                    checklist.description != null && checklist.description!.isNotEmpty
-                                                    ? Text(checklist.description ?? "-") : const Text("-")
-                                                  ],
-                                                )
-                                              ],
-                                            )
+                                const Divider(thickness: 1, color: Colors.grey),
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Checklists",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600
                                           ),
-                                        );
-                                      }
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Flexible(
+                                          child: ListView.builder(
+                                              itemCount: activities.length,
+                                              itemBuilder: (BuildContext context, int index) {
+                                                IssueChecklist checklist = checklists[index];
+                                                return Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                                  child: Row(
+                                                    children: [
+                                                      Checkbox(
+                                                          checkColor: Colors.white,
+                                                          activeColor: Colors.green,
+                                                          visualDensity: VisualDensity.compact,
+                                                          value: checklist.isChecked,
+                                                          onChanged: (bool? isChecked) => _onCheckEditTask(checklist.id)
+                                                      ),
+                                                      const SizedBox(width: 16),
+                                                      Text(checklist.name ?? "-",
+                                                        style: const TextStyle(fontSize: 14),
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
                         if (activities.isNotEmpty)
-                          Expanded(
+                          Flexible(
                             child: Column(
                               children: [
-                                const SizedBox(height: 16.0),
-                                const Text(
-                                  "Activities",
-                                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-                                ),
-                                const SizedBox(height: 8.0),
-                                Expanded(
-                                  child: ListView.builder(
-                                      itemCount: activities.length,
-                                      itemBuilder: (BuildContext context, int index) {
-                                        IssueActivity activity = activities[index];
-                                        return Card(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(16.0),
-                                            child: Text(activity.message ?? "-"),
+                                const Divider(thickness: 1, color: Colors.grey),
+                                Flexible(
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        const Text("Activities",
+                                          style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600
                                           ),
-                                        );
-                                      }
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Flexible(
+                                          child: ListView.builder(
+                                              itemCount: activities.length,
+                                              itemBuilder: (BuildContext context, int index) {
+                                                IssueActivity activity = activities[index];
+                                                return Padding(
+                                                  padding: const EdgeInsets.symmetric(vertical: 8),
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.start,
+                                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(utils.DateUtils.formatToDisplayString(activity.created, format: "dd MMM yyyy, hh.mm"),
+                                                        style: const TextStyle(fontSize: 12),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Text(activity.message ?? "-",
+                                                        style: const TextStyle(fontSize: 14),
+                                                      ),
+                                                      const SizedBox(height: 4),
+                                                      Text("Changes by ${activity.userName ?? "-"}",
+                                                        style: const TextStyle(fontSize: 14),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              }
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ],

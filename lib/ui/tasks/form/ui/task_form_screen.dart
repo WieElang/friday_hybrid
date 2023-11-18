@@ -34,10 +34,12 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
   @override
   Widget build(BuildContext context) {
     final String title;
+    final String buttonTitle;
     List<Issue> issues = Provider.of<TaskFormViewModel>(context).issues;
 
     if (widget.task != null) {
-      title = "Update Task";
+      title = "Edit Task";
+      buttonTitle = "Edit";
       if (!isInitialized) {
         _nameController.text = widget.task!.name;
         _notesController.text = widget.task!.notes ?? "";
@@ -47,7 +49,8 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
         isInitialized = true;
       }
     } else {
-      title = "Add Task";
+      title = "Create Task";
+      buttonTitle = "Create";
     }
 
     return Scaffold(
@@ -76,150 +79,168 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        SizedBox(
-                          width: double.infinity,
-                          child: Column(
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text("Issue"),
+                            const SizedBox(height: 4),
+                            SizedBox(
+                              width: double.infinity,
+                              child: Card(
+                                color: const Color(0xFF363232),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4.0),
+                                  side: const BorderSide(
+                                      color: Colors.grey,
+                                      width: 1.0
+                                  ),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton(
+                                      isExpanded: true,
+                                      value: _selectedIssue,
+                                      items: issues.map<DropdownMenuItem<Issue>>((Issue item) {
+                                        return DropdownMenuItem<Issue>(
+                                            value: item,
+                                            child: Text(item.title)
+                                        );
+                                      }).toList(),
+                                      onChanged: (Issue? value) {
+                                        setState(() {
+                                          if (value != null) {
+                                            _selectedIssue = value;
+                                          }
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        const Text("Name"),
+                        const SizedBox(height: 4),
+                        Card(
+                          color: const Color(0xFF363232),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: const BorderSide(
+                                color: Colors.grey,
+                                width: 1.0
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _nameController,
+                              decoration: const InputDecoration.collapsed(
+                                hintText: 'Do Something',
+                                floatingLabelBehavior: FloatingLabelBehavior.never
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text("Link"),
+                        const SizedBox(height: 4),
+                        Card(
+                          color: const Color(0xFF363232),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: const BorderSide(
+                                color: Colors.grey,
+                                width: 1.0
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              controller: _linkController,
+                              decoration: const InputDecoration.collapsed(
+                                  hintText: 'Github Link',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        const Text("Notes"),
+                        const SizedBox(height: 4),
+                        Card(
+                          color: const Color(0xFF363232),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                            side: const BorderSide(
+                                color: Colors.grey,
+                                width: 1.0
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: TextField(
+                              minLines: 4,
+                              maxLines: 6,
+                              controller: _notesController,
+                              decoration: const InputDecoration.collapsed(
+                                  hintText: 'Write some notes',
+                                  floatingLabelBehavior: FloatingLabelBehavior.never
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        if (widget.task != null)
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              const Text("Issue"),
+                              const Text("Status"),
                               const SizedBox(height: 4),
-                              Card(
-                                child: DropdownMenu<Issue>(
-                                  initialSelection: _selectedIssue,
-                                  dropdownMenuEntries: issues.map<DropdownMenuEntry<Issue>>((Issue value) {
-                                    return DropdownMenuEntry<Issue>(
-                                        value: value,
-                                        label: value.title
-                                    );
-                                  }).toList(),
-                                  onSelected: (Issue? value) {
-                                    setState(() {
-                                      if (value != null) {
-                                        _selectedIssue = value;
-                                      }
-                                    });
-                                  },
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                        TextField(
-                          controller: _nameController,
-                          decoration: const InputDecoration(
-                            labelText: 'Name',
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _notesController,
-                          decoration: const InputDecoration(
-                              labelText: 'Notes'
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        TextField(
-                          controller: _linkController,
-                          decoration: const InputDecoration(
-                              labelText: 'Link'
-                          ),
-                        ),
-                        if (widget.task != null)
-                          SizedBox(
-                            width: double.infinity,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 20),
-                                const Text("Status"),
-                                const SizedBox(height: 4),
-                                Card(
-                                  child: DropdownMenu<TaskStatus>(
-                                    initialSelection: _selectedStatus,
-                                    dropdownMenuEntries: TaskStatus.values.map<DropdownMenuEntry<TaskStatus>>((TaskStatus value) {
-                                      return DropdownMenuEntry<TaskStatus>(
-                                          value: value,
-                                          label: value.displayName
-                                      );
-                                    }).toList(),
-                                    onSelected: (TaskStatus? value) {
-                                      setState(() {
-                                        if (value != null) {
-                                          _selectedStatus = value;
-                                        }
-                                      });
-                                    },
+                              SizedBox(
+                                width: double.infinity,
+                                child: Card(
+                                  color: const Color(0xFF363232),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(4.0),
+                                    side: const BorderSide(
+                                        color: Colors.grey,
+                                        width: 1.0
+                                    ),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton(
+                                        isExpanded: true,
+                                        value: _selectedStatus,
+                                        items: TaskStatus.values.map<DropdownMenuItem<TaskStatus>>((TaskStatus item) {
+                                          return DropdownMenuItem<TaskStatus>(
+                                              value: item,
+                                              child: Text(item.displayName)
+                                          );
+                                        }).toList(),
+                                        onChanged: (TaskStatus? value) {
+                                          setState(() {
+                                            if (value != null) {
+                                              _selectedStatus = value;
+                                            }
+                                          });
+                                        },
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
-                        const SizedBox(height: 26),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 45.0,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(16.0),
-                                  )
                               ),
-                              onPressed: () {
-                                final name = _nameController.text;
-                                final notes = _notesController.text;
-                                final link = _linkController.text;
-
-                                if (name.isEmpty) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('Task name is required'),
-                                    ),
-                                  );
-                                  return;
-                                }
-
-                                if (widget.task != null) {
-                                  Provider.of<TaskFormViewModel>(context, listen: false).edit(widget.task!.id, widget.project.id, _selectedIssue!.id, name, _selectedStatus!.value, notes: notes, link: link).then((value) => {
-                                    if (value != null) {
-                                      if (value.data != null) {
-                                        Navigator.pop(context),
-                                        Provider.of<TaskDetailViewModel>(context, listen: false).getTask(widget.task!.id)
-                                      } else if (value.errorMessage != null) {
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          content: Text(value.errorMessage ?? 'Something wrong'),
-                                        ))
-                                      }
-                                    }
-                                  });
-                                } else {
-                                  Provider.of<TaskFormViewModel>(context, listen: false).add(widget.project.id, _selectedIssue!.id, name, notes: notes, link: link).then((value) => {
-                                    if (value != null) {
-                                      if (value.data != null) {
-                                        Navigator.pop(context),
-                                        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id)
-                                      } else if (value.errorMessage != null) {
-                                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          content: Text(value.errorMessage ?? 'Something wrong'),
-                                        ))
-                                      }
-                                    }
-                                  });
-                                }
-                              },
-                              child: Text(
-                                title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 16.0
-                                ),
-                              )
+                            ],
                           ),
-                        )
                       ],
                     ),
                   ),
@@ -227,7 +248,71 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
               ],
             ),
           ),
-        )
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: Container(
+          width: double.infinity,
+          height: 45.0,
+          margin: const EdgeInsets.all(16.0),
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.orange,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  )
+              ),
+              onPressed: () {
+                final name = _nameController.text;
+                final notes = _notesController.text;
+                final link = _linkController.text;
+
+                if (name.isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Task name is required'),
+                    ),
+                  );
+                  return;
+                }
+
+                if (widget.task != null) {
+                  Provider.of<TaskFormViewModel>(context, listen: false).edit(widget.task!.id, widget.project.id, _selectedIssue!.id, name, _selectedStatus!.value, notes: notes, link: link).then((value) => {
+                    if (value != null) {
+                      if (value.data != null) {
+                        Navigator.pop(context),
+                        Provider.of<TaskDetailViewModel>(context, listen: false).getTask(widget.task!.id)
+                      } else if (value.errorMessage != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(value.errorMessage ?? 'Something wrong'),
+                        ))
+                      }
+                    }
+                  });
+                } else {
+                  Provider.of<TaskFormViewModel>(context, listen: false).add(widget.project.id, _selectedIssue!.id, name, notes: notes, link: link).then((value) => {
+                    if (value != null) {
+                      if (value.data != null) {
+                        Navigator.pop(context),
+                        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id)
+                      } else if (value.errorMessage != null) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(value.errorMessage ?? 'Something wrong'),
+                        ))
+                      }
+                    }
+                  });
+                }
+              },
+              child: Text(
+                buttonTitle,
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                    fontSize: 14.0
+                ),
+              )
+          ),
+        ),
     );
   }
 }
