@@ -21,8 +21,10 @@ class TaskDao {
   static RealmResults<Task> getDailyTask(Realm realm) {
     final now = DateTime.now();
     final today = DateTime(now.year, now.month, now.day);
-    final taskIds = TaskActivityDao.getTodayActivities(realm);
-    return realm.query<Task>(r'id IN {$0} OR created >= $1', [taskIds.join(", "), today]);
+    final activities = TaskActivityDao.getTodayActivities(realm);
+    final taskIds = activities.map((e) => e.task?.id);
+    final idQuery = 'id IN {${taskIds.join(", ")}} ';
+    return realm.query<Task>(idQuery + r'OR created >= $0', [today]);
   }
 
   static RealmResults<Task> getByIds(Realm realm, List<int> ids) {
