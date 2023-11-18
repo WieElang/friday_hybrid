@@ -5,7 +5,10 @@ import 'package:friday_hybrid/data/remote/utils/api_response_utils.dart';
 import 'package:friday_hybrid/ui/daily_tasks/viewModel/daily_task_view_model.dart';
 import 'package:friday_hybrid/ui/login/ui/login_screen.dart';
 import 'package:friday_hybrid/ui/tasks/details/ui/task_detail_screen.dart';
+import 'package:friday_hybrid/utils/date_utils.dart' as utils;
 import 'package:provider/provider.dart';
+
+import '../../tasks/form/ui/task_form_screen.dart';
 
 class DailyTaskScreen extends StatefulWidget {
   const DailyTaskScreen({super.key});
@@ -15,6 +18,7 @@ class DailyTaskScreen extends StatefulWidget {
 }
 
 class _DailyTaskScreenState extends State<DailyTaskScreen> {
+  final DateTime today = DateTime.now().toLocal();
 
   @override
   void initState() {
@@ -29,59 +33,93 @@ class _DailyTaskScreenState extends State<DailyTaskScreen> {
     );
   }
 
+  void _onEditTask(Task task) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => TaskFormScreen(project: task.project!, task: task))
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     BaseData<List<Task>> taskData = Provider.of<DailyTaskViewModel>(context).baseData;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Daily Task"),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Daily Task",
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.w600
+              )
+            ),
+            Text(utils.DateUtils.formatToDisplayString(today),
+              style: const TextStyle(fontSize: 12.0),
+            ),
+          ],
+        ),
         backgroundColor: Colors.transparent,
-        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+        elevation: 0.0,
         centerTitle: false,
       ),
       body: Column(
         children: <Widget>[
-          taskData.data != null && taskData.data!.isNotEmpty
-              ? Expanded(
-              child: ListView.builder(
-                  itemCount: taskData.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Task task = taskData.data![index];
-                    return InkWell(
-                      onTap: () => _onSelectedTask(task),
-                      child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                            child: Text(task.name),
-                          )
+          Flexible(
+            child: Column(
+              children: [
+                taskData.data != null && taskData.data!.isNotEmpty
+                    ? Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      child: ListView.builder(
+                          itemCount: taskData.data!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            Task task = taskData.data![index];
+                            return InkWell(
+                              onTap: () => _onSelectedTask(task),
+                              onLongPress: () => _onEditTask(task),
+                              child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  color: const Color(0xFF363232),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                                    child: Text(task.name),
+                                  )
+                              ),
+                            );
+                          }
                       ),
-                    );
-                  }
-              ))
-              : const Expanded(child: Center(
-            child: Text('No Data'),
-          )),
-          Expanded(
-              child: Center(
-                  child: Column(
-                    children: [
-                      if (taskData.errorMessage != null)
-                        Text(taskData.errorMessage!),
-                      if (taskData.exception is SessionException)
-                        ElevatedButton(
-                            onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const LoginScreen())
-                              ).then((value) => {
-                                Provider.of<DailyTaskViewModel>(context, listen: false).getTasks()
-                              })
-                            },
-                            child: const Text('Login Again')
-                        )
-                    ],
-                  )
-              )
+                    ))
+                    : const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: Text('No Data')),
+                    ),
+              ],
+            ),
+          ),
+          Flexible(
+            child: Center(
+                child: Column(
+                  children: [
+                    if (taskData.errorMessage != null)
+                      Text(taskData.errorMessage!),
+                    if (taskData.exception is SessionException)
+                      ElevatedButton(
+                          onPressed: () => {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => const LoginScreen())
+                            ).then((value) => {
+                              Provider.of<DailyTaskViewModel>(context, listen: false).getTasks()
+                            })
+                          },
+                          child: const Text('Login Again')
+                      )
+                  ],
+                )
+            ),
           )
         ],
       ),

@@ -14,6 +14,13 @@ class ApiResponseUtils {
         throw const SessionException('Session Expired');
       case 400 | 401 | 500:
         throw Exception(response.body.toString());
+        // dynamic responseJson = jsonDecode(response.body);
+        // final String errorMessage = responseJson["error_message"];
+        // if (errorMessage.isNotEmpty) {
+        //   throw Exception(errorMessage);
+        // } else {
+        //   throw Exception(response.body.toString());
+        // }
       default:
         throw Exception('Error occured while communication with server with status code : ${response.statusCode}');
     }

@@ -7,6 +7,7 @@ import '../../../../data/base_data.dart';
 import '../../../../data/local/schemas.dart';
 import '../../../../data/remote/utils/api_response_utils.dart';
 import '../../../login/ui/login_screen.dart';
+import '../../form/ui/issue_form_screen.dart';
 import '../viewModel/issue_view_model.dart';
 
 class IssueScreen extends StatefulWidget {
@@ -31,70 +32,110 @@ class _IssueScreenState extends State<IssueScreen> {
     );
   }
 
+  void _onEditIssue(Issue issue) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => IssueFormScreen(issue: issue))
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     BaseData<List<Issue>> issueData = Provider.of<IssueViewModel>(context).baseData;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Issues"),
+        title: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Your Issues",
+                style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600
+                )
+            ),
+            const SizedBox(height: 2.0),
+            Text("${issueData.data?.length ?? 0} active issues",
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
         backgroundColor: Colors.transparent,
-        elevation: Theme.of(context).platform == TargetPlatform.iOS ? 0.0 : 4.0,
+        elevation: 0.0,
         centerTitle: false,
       ),
       body: Column(
         children: <Widget>[
-          issueData.data != null
-              ? Expanded(
-              child: ListView.builder(
-                  itemCount: issueData.data!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    final issue = issueData.data![index];
-                    return InkWell(
-                      onTap: () => _onSelectedIssue(issue),
-                      child: Card(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(issue.title),
-                                const SizedBox(height: 4.0),
-                                Text("Status: ${IssueStatus.getStatus(issue.statusValue)?.displayName ?? "-"}"),
-                                const SizedBox(height: 4.0),
-                                Text("Priority: ${IssuePriority.getPriority(issue.priorityValue)?.displayName ?? "-"}"),
-                                const SizedBox(height: 12.0),
-                                Text(issue.deadlineDate.toString())
-                              ],
-                            ),
-                          )
+          Flexible(
+            child: Column(
+              children: [
+                issueData.data != null
+                    ? Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                      child: ListView.builder(
+                          itemCount: issueData.data!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final issue = issueData.data![index];
+                            return InkWell(
+                              onTap: () => _onSelectedIssue(issue),
+                              onLongPress: () => _onEditIssue(issue),
+                              child: Card(
+                                  margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+                                  color: const Color(0xFF363232),
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 16.0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          TaskStatus.getStatus(issue.statusValue)?.displayName ?? "-",
+                                          style: const TextStyle(
+                                            fontSize: 12.0,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 2.0),
+                                        Text(
+                                          issue.title,
+                                          style: const TextStyle(
+                                              fontSize: 14.0,
+                                              fontWeight: FontWeight.w600
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                              ),
+                            );
+                          }
                       ),
-                    );
-                  }
-              ))
-              : const Expanded(child: Center(
-            child: Text('No Data'),
-          )),
-          Expanded(
-              child: Center(
-                  child: Column(
-                    children: [
-                      if (issueData.errorMessage != null)
-                        Text(issueData.errorMessage!),
-                      if (issueData.exception is SessionException)
-                        ElevatedButton(
-                            onPressed: () => {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => const LoginScreen())
-                              ).then((value) => {
-                                Provider.of<IssueViewModel>(context, listen: false).getIssues()
-                              })
-                            },
-                            child: const Text('Login Again')
-                        )
-                    ],
-                  )
+                    ))
+                    : const Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: Center(child: Text('No Data')),
+                    ),
+              ],
+            ),
+          ),
+          Flexible(
+              child: Column(
+                children: [
+                  if (issueData.errorMessage != null)
+                    Text(issueData.errorMessage!),
+                  if (issueData.exception is SessionException)
+                    ElevatedButton(
+                        onPressed: () => {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => const LoginScreen())
+                          ).then((value) => {
+                            Provider.of<IssueViewModel>(context, listen: false).getIssues()
+                          })
+                        },
+                        child: const Text('Login Again')
+                    )
+                ],
               )
           )
         ],

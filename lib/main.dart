@@ -1,5 +1,6 @@
 import 'package:alarm/alarm.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:friday_hybrid/ui/accounts/ui/account_screen.dart';
 import 'package:friday_hybrid/ui/accounts/viewModel/account_view_model.dart';
 import 'package:friday_hybrid/ui/daily_tasks/ui/daily_task_screen.dart';
@@ -22,19 +23,31 @@ import 'core/session.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  setupAlarm();
+  // setupAlarm();
   runApp(const MyApp());
 }
 
 void setupAlarm() async {
   await Alarm.init();
-  AlarmUtils.stopAlarm();
+  AlarmUtils.stopAllAlarm();
 
   var now = DateTime.now();
-  AlarmUtils.setAlarm(
-      DateTime(now.year, now.month, now.day, 16, 0, 0),
-      "Daily Meeting", "Please update your daily task"
-  );
+  int day = now.weekday;
+  if (![DateTime.saturday, DateTime.sunday].contains(day)) {
+    // Set Morning Alarm
+    AlarmUtils.setAlarm(
+        AlarmUtils.morningAlarmId,
+        DateTime(now.year, now.month, now.day, 9, 0, 0).toLocal(),
+        "Be Ready For Work", "Please check your task and issue"
+    );
+
+    // Set Afternoon Alarm
+    AlarmUtils.setAlarm(
+        AlarmUtils.afternoonAlarmId,
+        DateTime(now.year, now.month, now.day, 16, 30, 0).toLocal(),
+        "End Of Day", "Please update your task"
+    );
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -43,6 +56,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
+
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
@@ -57,11 +72,21 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AccountViewModel()),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Friday',
         theme: ThemeData(
             primarySwatch: Colors.orange,
-            brightness: Brightness.dark
+            brightness: Brightness.light,
+            fontFamily: 'Poppins',
+            scaffoldBackgroundColor: Colors.white
         ),
+        darkTheme: ThemeData(
+            primarySwatch: Colors.orange,
+            brightness: Brightness.dark,
+            fontFamily: 'Poppins',
+            scaffoldBackgroundColor: Colors.black
+        ),
+        themeMode: ThemeMode.dark,
         home: const HomeBottomNavigationBar(),
       ),
     );
@@ -119,6 +144,7 @@ class _HomeBottomNavigationBarState extends State<HomeBottomNavigationBar> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
