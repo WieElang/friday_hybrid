@@ -139,7 +139,8 @@ class _IssueFormScreenState extends State<IssueFormScreen> {
                       DisplayUtils.showAlert(context,
                           "Edit Issue",
                           "Issue edited successfully",
-                          () => { Navigator.pop(context) }
+                          () => { Navigator.pop(context) },
+                          isDismissible: false
                       )
                     } else if (value.errorMessage != null) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

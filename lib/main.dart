@@ -23,7 +23,7 @@ import 'core/session.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  // setupAlarm();
+  setupAlarm();
   runApp(const MyApp());
 }
 

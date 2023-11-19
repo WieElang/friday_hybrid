@@ -6,6 +6,7 @@ import 'package:friday_hybrid/ui/tasks/index/viewModel/task_view_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../data/local/schemas.dart';
+import '../../../../utils/display_utils.dart';
 
 class TaskFormScreen extends StatefulWidget {
   final Project project;
@@ -279,8 +280,13 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                   Provider.of<TaskFormViewModel>(context, listen: false).edit(widget.task!.id, widget.project.id, _selectedIssue!.id, name, _selectedStatus!.value, notes: notes, link: link).then((value) => {
                     if (value != null) {
                       if (value.data != null) {
-                        Navigator.pop(context),
-                        Provider.of<TaskDetailViewModel>(context, listen: false).getTask(widget.task!.id)
+                        Provider.of<TaskDetailViewModel>(context, listen: false).getTask(widget.task!.id),
+                        DisplayUtils.showAlert(context,
+                            "Edit Task",
+                            "task edited successfully",
+                                () => { Navigator.pop(context)},
+                            isDismissible: false
+                        ),
                       } else if (value.errorMessage != null) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(value.errorMessage ?? 'Something wrong'),
@@ -292,8 +298,13 @@ class _TaskFormScreenState extends State<TaskFormScreen> {
                   Provider.of<TaskFormViewModel>(context, listen: false).add(widget.project.id, _selectedIssue!.id, name, notes: notes, link: link).then((value) => {
                     if (value != null) {
                       if (value.data != null) {
-                        Navigator.pop(context),
-                        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id)
+                        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id),
+                        DisplayUtils.showAlert(context,
+                            "Create Task",
+                            "task created successfully",
+                                () => { Navigator.pop(context)},
+                            isDismissible: false
+                        ),
                       } else if (value.errorMessage != null) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text(value.errorMessage ?? 'Something wrong'),
