@@ -40,6 +40,13 @@ class TaskDao {
     realm.delete(task);
   }
 
+  static void deleteInActive(Realm realm, List<int> activeIds) {
+    final allTasks = getAll(realm);
+    final activeTasks = realm.query<Task>("id IN {${activeIds.join(", ")}}");
+    final inActiveTasks = allTasks.where((element) => !activeTasks.contains(element)).toList();
+    realm.deleteMany(inActiveTasks);
+  }
+
   static void fromApiModels(TaskListApiModel taskListApiModel) {
     final realm = realmInstance;
 
@@ -80,6 +87,10 @@ class TaskDao {
           CommentDao.fromApiModels(taskApiModel.comments!);
         }
       }
+    });
+
+    realm.write(() => {
+      deleteInActive(realm, taskIds)
     });
   }
 

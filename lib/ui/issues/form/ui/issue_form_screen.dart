@@ -138,10 +138,8 @@ class _IssueFormScreenState extends State<IssueFormScreen> {
                       Provider.of<IssueDetailViewModel>(context, listen: false).getIssue(widget.issue.id),
                       DisplayUtils.showAlert(context,
                           "Edit Issue",
-                          "Issue edited successfully", () => {
-                            Navigator.pop(context),
-                          },
-                          isDismissible: false
+                          "Issue edited successfully",
+                          () => { Navigator.pop(context) }
                       )
                     } else if (value.errorMessage != null) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

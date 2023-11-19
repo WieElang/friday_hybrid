@@ -41,14 +41,15 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
     DisplayUtils.showAlert(
         context,
         "Delete Task",
-        "Do you want to delete this task ?", () => {
+        "Do you want to delete this task ?",
+        () => {
           Provider.of<TaskDetailViewModel>(context, listen: false).delete(widget.task.id).then((value) => {
             if (value != null) {
               if (value.data != null) {
-                  Navigator.pop(context)
-                } else if (value.errorMessage != null) {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(value.errorMessage ?? 'Something wrong'),
+                Navigator.pop(context)
+              } else if (value.errorMessage != null) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(value.errorMessage ?? 'Something wrong')
                 ))
               }
             }

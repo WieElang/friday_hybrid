@@ -25,25 +25,26 @@ class _TaskScreenState extends State<TaskScreen> {
     Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id);
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id);
-    }
-  }
-
   void _onSelectedTask(Task task) {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => TaskDetailScreen(task: task))
-    );
+    ).then((value) => {
+      setState(() {
+        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id);
+      })
+    });
   }
 
   void _onEditTask(Task task) {
     Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.project, task: task))
-    );
+    ).then((value) => {
+      setState(() {
+        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id);
+      })
+    });
   }
 
   void _onAddTask() {
@@ -51,7 +52,9 @@ class _TaskScreenState extends State<TaskScreen> {
         context,
         MaterialPageRoute(builder: (context) => TaskFormScreen(project: widget.project))
     ).then((value) => {
-      Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id)
+      setState(() {
+        Provider.of<TaskViewModel>(context, listen: false).getTasks(widget.project.id);
+      })
     });
   }
 

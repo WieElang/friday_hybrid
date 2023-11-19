@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DisplayUtils {
-  static showAlert(BuildContext context, String title, String message, Function() okPressedListener, { bool isDismissible = true }) {
+  static showAlert(BuildContext context, String title, String message, Function() okPressedListener) {
     Widget okButton = TextButton(
       child: const Text("OK",
         style: TextStyle(fontWeight: FontWeight.w600),
       ),
-      onPressed: () => okPressedListener,
+      onPressed: () => {
+        Navigator.pop(context),
+        okPressedListener()
+      },
     );
 
     // set up the AlertDialog
@@ -25,7 +28,7 @@ class DisplayUtils {
       builder: (BuildContext context) {
         return alert;
       },
-      barrierDismissible: isDismissible,
+      barrierDismissible: false,
     );
   }
 

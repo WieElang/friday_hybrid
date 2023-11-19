@@ -121,7 +121,7 @@ class TaskApiService {
       final responseJson = ApiResponseUtils.returnResponse(response);
       final statusApiModel = BaseStatusApiModel.fromJson(responseJson);
       if (statusApiModel.status == "OK") {
-        TaskDao.delete(realmInstance, taskId);
+        await realmInstance.writeAsync(() => TaskDao.delete(realmInstance, taskId));
       }
       return ApiResponse(statusApiModel, null);
     } on SocketException {

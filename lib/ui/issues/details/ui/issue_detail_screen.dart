@@ -252,7 +252,7 @@ class _IssueDetailScreenState extends State<IssueDetailScreen> with WidgetsBindi
                                         const SizedBox(height: 8),
                                         Flexible(
                                           child: ListView.builder(
-                                              itemCount: activities.length,
+                                              itemCount: checklists.length,
                                               itemBuilder: (BuildContext context, int index) {
                                                 IssueChecklist checklist = checklists[index];
                                                 return Padding(
