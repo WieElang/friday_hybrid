@@ -62,7 +62,6 @@ class _TaskDetailScreenState extends State<TaskDetailScreen> with WidgetsBinding
   Widget build(BuildContext context) {
     BaseData<Task> taskData = Provider.of<TaskDetailViewModel>(context).taskData;
     List<TaskActivity> activities = Provider.of<TaskDetailViewModel>(context).activities;
-    List<Comment> comments = Provider.of<TaskDetailViewModel>(context).comments;
 
     return Scaffold(
       body: SafeArea(

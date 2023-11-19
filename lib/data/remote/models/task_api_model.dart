@@ -74,7 +74,6 @@ class TaskApiModel {
   final String updated;
   final String created;
   final TaskActivityListApiModel? activities;
-  final CommentListApiModel? comments;
 
   const TaskApiModel({
     required this.id,
@@ -86,20 +85,14 @@ class TaskApiModel {
     required this.link,
     required this.updated,
     required this.created,
-    required this.activities,
-    required this.comments
+    required this.activities
   });
 
   factory TaskApiModel.fromJson(Map<String, dynamic> json) {
     TaskActivityListApiModel? activities;
-    CommentListApiModel? comments;
 
     if (json['activities'] != null) {
       activities = TaskActivityListApiModel.fromJson(json);
-    }
-
-    if (json['comments'] != null) {
-      comments = CommentListApiModel.fromJson(json);
     }
 
     return TaskApiModel(
@@ -112,8 +105,7 @@ class TaskApiModel {
         link: json['link'],
         updated: json['updated'],
         created: json['created'],
-        activities: activities,
-        comments: comments
+        activities: activities
     );
   }
 }

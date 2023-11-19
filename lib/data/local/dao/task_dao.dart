@@ -1,4 +1,3 @@
-import 'package:friday_hybrid/data/local/dao/comment_dao.dart';
 import 'package:friday_hybrid/data/local/dao/issue_dao.dart';
 import 'package:friday_hybrid/data/local/dao/project_dao.dart';
 import 'package:friday_hybrid/data/local/dao/task_activity_dao.dart';
@@ -82,10 +81,6 @@ class TaskDao {
         if (taskApiModel.activities != null) {
           TaskActivityDao.fromApiModels(taskApiModel.activities!);
         }
-
-        if (taskApiModel.comments != null) {
-          CommentDao.fromApiModels(taskApiModel.comments!);
-        }
       }
     });
 
@@ -110,10 +105,6 @@ class TaskDao {
 
       if (taskApiModel.activities != null) {
         TaskActivityDao.fromApiModels(taskApiModel.activities!);
-      }
-
-      if (taskApiModel.comments != null) {
-        CommentDao.fromApiModels(taskApiModel.comments!);
       }
     });
   }
